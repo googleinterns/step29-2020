@@ -6,25 +6,30 @@ import java.util.Optional;
 /** Class that represents a session. */
 public class Session {
 
-  private String sessionId;
+  private final String sessionId;
   private Optional<String> screenNameOfController;
   private Optional<String> ipOfVM;
 
-  public Session (String sessionId, Optional <String> screenNameOfController, Optional <String> ipOfVM ) {
+  /** Initializes a Session object
+   * @param {String} sessionID - the id used to identify a session.
+   * @param {Optional <String>} screenNameOfController - the screen name of the attendee with the controller. 
+   * @param {Optional <String>} ipOfVM - the ip of the VM assigned to the session.
+   */
+  public Session (String sessionId, Optional <String> screenNameOfController, Optional <String> ipOfVM) {
     this.sessionId = sessionId;
     this.screenNameOfController = screenNameOfController;
     this.ipOfVM = ipOfVM;
   }
 
-  public String getSessionId(){
+  public String getSessionId() {
     return sessionId;
   }
 
-  public Optional <String> getScreenNameOfController(){
+  public Optional <String> getScreenNameOfController() {
     return screenNameOfController;
   }
 
-  public Optional <String> getIpOfVM(){
+  public Optional <String> getIpOfVM() {
       return ipOfVM;
   }
   
@@ -33,7 +38,7 @@ public class Session {
    * @param {Session} session - the Session object that will be made into an
    *     Entity.
    */
-  public static Entity toEntity(Session session){
+  public static Entity toEntity(Session session) {
     Entity sessionEntity = new Entity("Session");
     sessionEntity.setProperty("sessionId", session.sessionId);
     sessionEntity.setProperty("screenNameOfController", session.screenNameOfController);
@@ -46,7 +51,7 @@ public class Session {
    * @param {Entity} sessionEntity - entity of kind "Session" with various 
    *     properties similar to the fields of a session object.
    */
-  public static Session toSession(Entity sessionEntity){
+  public static Session toSession(Entity sessionEntity) {
     String sessionId = (String) sessionEntity.getProperty("sessionId");    
     Optional<String> screenNameOfController = (Optional<String>) sessionEntity.getProperty("screenNameOfController");
     Optional<String> ipOfVM = (Optional<String>) sessionEntity.getProperty("ipOfVM");
