@@ -11,7 +11,7 @@ public class Attendee {
   private Date timeLastPolled;
   
   /** Initializes an Attendee object
-   * @param {String} sessionId - the id of the session the attendee is apart of. 
+   * @param {String} sessionId - the session the attendee is attached to.
    * @param {String} screenName - the screen name of the attendee. 
    * @param {Date} timeLastPolled - the time attendee was last polled.
    */
@@ -35,8 +35,8 @@ public class Attendee {
   
   /**
    * Returns a new Entity of kind "Attendee" from an Attendee object.
-   * @param {Attendee} attendee - the Attendee object that will be made into an
-   *     Entity.
+   * @param {Attendee} attendee - the Attendee object that will be made into
+   *     an Entity.
    */
   public static Entity toEntity(Attendee attendee) {
     Entity attendeeEntity = new Entity("Attendee");

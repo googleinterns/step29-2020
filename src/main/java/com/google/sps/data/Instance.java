@@ -11,7 +11,8 @@ public class Instance {
 
   /** Initializes an Instance object
    * @param {String} instanceName - the name of the instance.
-   * @param {Optional <String>} sessionID - the session id associated with the instance. 
+   * @param {Optional<String>} sessionID - the session id 
+   *    associated with the instance. 
    */
   public Instance (String instanceName, Optional<String> sessionId) {
     this.instanceName = instanceName;
@@ -28,8 +29,8 @@ public class Instance {
 
   /**
    * Returns a new Entity of kind "Instance" from an Instance object.
-   * @param {Instance} instance - the Instance object that will be made into an
-   *     Entity.
+   * @param {Instance} instance - the Instance object that will be 
+   *    made into an Entity.
    */
   public static Entity toEntity(Instance instance) {
     Entity instanceEntity = new Entity("Instance");
@@ -40,12 +41,13 @@ public class Instance {
 
    /**
    * Returns a new Instance from an entity of kind "Instance".
-   * @param {Entity} instanceEntity - entity of kind "Instance" with various 
-   *     properties similar to the fields of a instance object.
+   * @param {Entity} instanceEntity - entity of kind "Instance" with 
+   *    various properties similar to the fields of a instance object.
    */
   public static Instance toInstance(Entity instanceEntity) {
     String instanceName = (String) instanceEntity.getProperty("instanceName");
-    Optional<String> sessionId = (Optional<String>) instanceEntity.getProperty("sessionId");    
+    Optional<String> sessionId = 
+        (Optional<String>) instanceEntity.getProperty("sessionId");    
     return new Instance(instanceName, sessionId);
   }
 }
