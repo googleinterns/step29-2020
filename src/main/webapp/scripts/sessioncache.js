@@ -26,16 +26,17 @@ class SessionCache {
     //this.trackForInactivityPoll_
 
     /**
-     * Holds the different keys being tracked by the SessionCache and their
-     * respective values.
+     * Holds the different keys being tracked by the SessionCache and 
+     * their respective values.
      * @private {Object}
      */
     //this.cacheObject_
 
     /**
-     * Represents the cadence at which the keys of the cacheObject have their
-     * values refreshed. For the purpose of this class, all of the keys refresh
-     * at the same rate of 30,000 milliseconds (or 30 seconds). 
+     * Represents the cadence at which the keys of the cacheObject
+     * have their values refreshed. For the purpose of this class,
+     * all of the keys refresh at the same rate of 30,000 milliseconds
+     * (or 30 seconds). 
      * @private @const {number}
      */
     // this.REFRESH_RATE_
@@ -66,8 +67,9 @@ class SessionCache {
   }
 
   /**
-   * Method updateDatePolledRequest_() is the fetch api request responsible
-   * for updating the server with the last time the current user polled.
+   * Method updateDatePolledRequest_() is the fetch api request 
+   * responsible for updating the server with the last time the 
+   * current user polled.
    * @private
    */
   updateDatePolledRequest_() {
@@ -75,17 +77,19 @@ class SessionCache {
   }
 
   /**
-   * Returns the value of the key specified if being tracked by the SessionCache.
+   * Returns the value of the key specified if being tracked by
+   * the cacheObject.
    * @param {string} key 
    * @return {Object} The value.
    */
   getValue(key) {
-    return;
+    return key;
   }
 
   /**
-   * Method updateControllerRequest_() is the fetch api request responsible
-   * for updating the server with who the controller should be.
+   * Method updateControllerRequest_() is the fetch api request 
+   * responsible for updating the server with who the controller 
+   * should be.
    * @param {string} name
    * @private
    */
@@ -94,10 +98,13 @@ class SessionCache {
   }
 
   /**
-   * Updates the controller of the session to be that of the person passed in.
+   * Updates the controller of the session to be that of the 
+   * person passed in.
    * @param {string} name 
    */
   updateController(name) {
     return;
   }
 }
+
+export { SessionCache };

@@ -4,12 +4,12 @@
   * be used to periodically update the server of necessary updates. 
   * By default, polling objects poll indefinitely over a
   * period of 30 seconds.
-  */
+  */ 
  class Poll {
   /**
    * Initializes a Poll object.
-   * @param {function(): ?Object} fetchAPIRequest Represents the API request
-   *    that is polled.
+   * @param {function(): ?Object} fetchAPIRequest Represents the API
+   *    request that is polled.
    * @param {number=} [pollingTime] Represents the cadence at which 
    *    the fetchRequest is called upon. Must be provided in milliseconds
    *    and is by default 30,000 milliseconds (or 30 seconds). 
@@ -38,7 +38,8 @@
     // this.MAX_ATTEMPTS_
 
     /**
-     * @private {number} represents the amount of times polling has occured. 
+     * @private {number} represents the amount of times polling has 
+     *    occured. 
      */
     // this.attempts_
   }
@@ -60,3 +61,5 @@
     return;
   }
 }
+
+export { Poll };
