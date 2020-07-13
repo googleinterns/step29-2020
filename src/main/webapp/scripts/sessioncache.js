@@ -2,6 +2,11 @@
  * SessionCache bridges the gap between the client and server. 
  * Allows client to indirectly stay in contact with the server,
  * encapsulating many of the contact points away from the client.
+ * 
+ * SessionCache looks for information about the current session and
+ * updates the server with information about each client in return (like
+ * date last contacted). Also includes some additional functionality, 
+ * like contacting the server to update the controller of the session.
  */
 class SessionCache {
   /**
