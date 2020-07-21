@@ -66,7 +66,7 @@ function updateSessionInfoAttendees() {
 
 /**
  * function notifyOfChangesToMembership() notifies 
- * users of anyone who has left/entered.
+ * users the message that's passed in.
  * @param {string} displayMessage message to display to users
  */
 function notifyOfChangesToMembership(displayMessage) {
