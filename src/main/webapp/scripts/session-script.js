@@ -54,8 +54,26 @@ function main() {
   sessionCache.getSession().then(sessionObject => {
     session = sessionObject;
   });
+  changeToReadOnly();
   remoteToSession(session.getIpOfVM());
   refresh();
+}
+
+/**
+ * function changetoReadOnly() changes the two inputs
+ * (one on the welcome message) and the other in the session 
+ * information div to show the session ID and then changes them
+ * to read only.
+ */
+function changeToReadOnly() {
+  const /** HTMLElement */ sessionInfoInput = 
+      document.getElementById('session-info-input');
+  sessionInfoInput.value = session.getSessionId();
+  sessionInfoInput.readOnly = true;
+  const /** HTMLElement */ welcomeMessageInput = 
+      document.getElementById('welcome-message-input');
+  welcomeMessageInput.value = session.getSessionId();
+  welcomeMessageInput.readOnly = true;
 }
 
 /**
@@ -163,4 +181,4 @@ function disconnectedFromServer() {
 
 export { openSessionInfo, closeDisplay, copyTextToClipboard,  
   updateController, updateSessionInfoAttendees, remoteToSession, 
-  connectedToServer, disconnectedFromServer };
+  connectedToServer, disconnectedFromServer, changeToReadOnly };

@@ -94,6 +94,22 @@ test('Tests to see if controller updates correctly UI wise', () => {
           backgroundColor).toEqual('rgb(255, 255, 255)');
 });
 
+test('tests changeToReadOnly()', () => {
+  document.body.innerHTML = '';
+  const sessionSpy = 
+  jest.spyOn(Session.prototype, 'getScreenNameOfController').
+      mockReturnValue('1eee3414123');
+  const sessionInfoInput = document.createElement('input');
+  sessionInfoInput.id = 'session-info-input';
+  const welcomeMessageInput = document.createElement('input');
+  welcomeMessageInput.id = 'welcome-message-input';
+  sessionscript.changeToReadOnly();
+  expect(sessionInfoInput.readOnly).toBe(true);
+  expect(welcomeMessageInput.readOnly).toBe(true);
+  expect(sessionInfoInput.value).toEqual('1eee3414123');
+  expect(welcomeMessageInput.value).toEqual('1eee3414123');
+});
+
 test(`We can check if correct errors are thrown -
     ${'connectedFromServer'}`, () => {
       try {
