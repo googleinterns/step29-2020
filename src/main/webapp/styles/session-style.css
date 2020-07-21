@@ -114,16 +114,15 @@ html {
   bottom: 0;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   display: none;
-  min-height: 200px;
   height: 10%;
   left: 0;
   margin: auto;
+  min-height: 200px;
   position: fixed;
   right: 0;
   top: 0;
   transition: .3s;
   width: 400px;
-  display: block;
 }
 
 #welcome-message-content {
