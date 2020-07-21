@@ -1,5 +1,5 @@
 // RFB holds the API to connect and communicate with a VNC server   
-import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
+//import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
 import { SessionCache } from '../scripts/sessioncache';
 import { Session } from '../scripts/session'
 
@@ -34,7 +34,7 @@ let sessionCache;
  * Represents the current session, a Session object.
  * @type {Object}
  */
-let session;
+let session = new Session();
 
 /**
  * Represents the noVNC client object; the single connection to the 
@@ -102,6 +102,11 @@ function refresh() {
   }, REFRESH_CADENCE);
 }
 
+/**
+ * function updateSessionInfoAttendees() adds new attendees to the
+ * session to the session info attendee div. Also removes attendees 
+ * if they left the session. Alerts users of anyone who has left/entered.
+ */
 function updateSessionInfoAttendees() {
   throw new Error('Unimplemented');
 }
@@ -118,7 +123,7 @@ function updateController() {
       sessionInfoAttendeesDiv.querySelectorAll('span');
   if (urlParameters.get('name') === 
     session.getScreenNameOfController()) {
-      sessionScreen.viewOnly = false;
+      //sessionScreen.viewOnly = false;
     }
   controllerToggleList.forEach(function(individualSpanElement) {
     individualSpanElement.style.backgroundColor = '#fff';
@@ -139,7 +144,7 @@ function openSessionInfo() {
 
 /**
  * function closeDisplay changes the display of the parent of the element
- * passed in to 'none'
+ * passed in to 'none'.
  */
 function closeDisplay(element) {
   document.getElementById(element.parentNode.id).style.display = 'none';
@@ -154,10 +159,17 @@ function copyTextToClipboard(element) {
   document.execCommand('copy');
 }
 
+/**
+ * function connectedToServer() is called on once the session connects.
+ */
 function connectedToServer() {
   throw new Error('Unimplemented');
 }
 
+/**
+ * function disconnectedFromServer() is called on once the session
+ * disconnects.
+ */
 function disconnectedFromServer() {
   throw new Error('Unimplemented');
 }

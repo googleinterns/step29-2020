@@ -1,4 +1,5 @@
 import * as sessionscript from './session-script';
+import { Session } from './session';
 
 const buildAttendeeDivSpy =
     jest.spyOn(sessionscript, 'buildAttendeeDiv');
@@ -9,7 +10,6 @@ const notifyOfChangesToMembershipSpy =
 
 afterEach(() => {    
   jest.clearAllMocks();
-  fetch.resetMocks();
 });
 
 test('display none to block', () => {
@@ -95,85 +95,6 @@ test.skip(`makes sure notifyOfChangesToMembership is
     }, 6000);
 });
 
-test.skip(`A new member 
-    -updateSessionInfoAttendees`, () => {
-      const expectedMessage =
-          `The following people have joined the session: ${'Miguel'} `;
-      document.body.innerHTML = '';
-      const sessionInfoAttendeeDiv =
-          document.createElement('div');
-      sessionInfoAttendeeDiv.id = 'session-info-attendees';
-      document.body.appendChild(sessionInfoAttendeeDiv);
-      const alertMembershipDiv =
-          document.createElement('div');
-      alertMembershipDiv.id = 'alert-membership';
-      document.body.appendChild(alertMembershipDiv);
-      const sessionSpy = 
-          jest.spyOn(Session.prototype, 'getListOfAttendees').
-              mockReturnValue(['Jessica', 'Bryan', 'Miguel']);
-      sessionscript.buildAttendeeDiv('Jessica');
-      sessionscript.buildAttendeeDiv('Bryan');
-      sessionscript.updateSessionInfoAttendees();
-      expect(notifyOfChangesToMembershipSpy).
-          toHaveBeenCalledWith(expectedMessage);
-      expect(buildAttendeeDivSpy).toBeCalledTimes(1);
-      expect(removeFromAttendeeDivSpy).toBeCalledTimes(0);
-});
-
-test.skip(`A member that has left
-    -updateSessionInfoAttendees`, () => {
-      const expectedMessage =
-          `The following people have left the session: ${'Bryan'} `;
-      document.body.innerHTML = '';
-      const sessionInfoAttendeeDiv =
-          document.createElement('div');
-      sessionInfoAttendeeDiv.id = 'session-info-attendees';
-      document.body.appendChild(sessionInfoAttendeeDiv);
-      const alertMembershipDiv =
-          document.createElement('div');
-      alertMembershipDiv.id = 'alert-membership';
-      document.body.appendChild(alertMembershipDiv);
-      const sessionSpy = 
-          jest.spyOn(Session.prototype, 'getListOfAttendees').
-              mockReturnValue(['Jessica']);
-      sessionscript.buildAttendeeDiv('Jessica');
-      sessionscript.buildAttendeeDiv('Bryan');
-      sessionscript.updateSessionInfoAttendees();
-      expect(notifyOfChangesToMembershipSpy).
-          toHaveBeenCalledWith(expectedMessage);
-      expect(buildAttendeeDivSpy).toBeCalledTimes(0);
-      expect(removeFromAttendeeDivSpy).toBeCalledTimes(1);
-      expect(removeFromAttendeeDivSpy).toBeCalledWith('Bryan');
-});
-
-test.skip(`A new member + a lost member' + 
-    '-updateSessionInfoAttendees`, () => {
-      const expectedMessage =
-          `The following people have joined the session: ${'Miguel'}. 
-          The folllowing people have left the session: ${'Bryan'}`;
-      document.body.innerHTML = '';
-      const sessionInfoAttendeeDiv =
-          document.createElement('div');
-      sessionInfoAttendeeDiv.id = 'session-info-attendees';
-      document.body.appendChild(sessionInfoAttendeeDiv);
-      const alertMembershipDiv =
-          document.createElement('div');
-      alertMembershipDiv.id = 'alert-membership';
-      document.body.appendChild(alertMembershipDiv);
-      const sessionSpy = 
-          jest.spyOn(Session.prototype, 'getListOfAttendees').
-              mockReturnValue(['Jessica', 'Miguel']);
-      sessionscript.buildAttendeeDiv('Jessica');
-      sessionscript.buildAttendeeDiv('Bryan');
-      sessionscript.updateSessionInfoAttendees();
-      expect(notifyOfChangesToMembershipSpy).
-          toHaveBeenCalledWith(expectedMessage);
-      expect(buildAttendeeDivSpy).toBeCalledTimes(1);
-      expect(buildAttendeeDivSpy).toBeCalledWith('Miguel');
-      expect(removeFromAttendeeDivSpy).toBeCalledTimes(1);
-      expect(removeFromAttendeeDivSpy).toBeCalledWith('Bryan');
-});
-
 test('Tests to see if controller updates correctly UI wise', () => {
   document.body.innerHTML = '';
   const sessionInfoAttendeeDiv =
@@ -200,7 +121,6 @@ test('Tests to see if controller updates correctly UI wise', () => {
       .parentElement.querySelector('span').style.
           backgroundColor).toEqual('rgb(255, 255, 255)');
 });
-
 
 test(`We can check if correct errors are thrown -
     ${'connectedFromServer'}`, () => {
