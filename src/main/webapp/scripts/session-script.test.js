@@ -1,20 +1,18 @@
-import exportFunctions, * as functions from './session-script';
+import exportFunctions, * as sessionscript from './session-script';
 import { Session } from './session';
 
 const buildAttendeeDivSpy =
     jest.spyOn(exportFunctions, 'buildAttendeeDiv');
-buildAttendeeDivSpy.mockImplementation(() => {
-  return;
-});
-const removeFromAttendeeDivSpy =
-    jest.spyOn(exportFunctions, 'removeFromAttendeeDiv');
-removeFromAttendeeDivSpy.mockImplementation(() => {
-  return;
-})
+const removeAttendeeDivSpy =
+    jest.spyOn(exportFunctions, 'removeAttendeeDiv');
 const notifyOfChangesToMembershipSpy =
     jest.spyOn(exportFunctions, 'notifyOfChangesToMembership');
 
-test.skip(`makes sure notifyOfChangesToMembership is
+afterEach(() => {    
+  jest.clearAllMocks();
+});
+
+test(`makes sure notifyOfChangesToMembership is
 correctly displaying message`, (done) => {
     const displayMessage = 'How are you ';
     document.body.innerHTML = '';
@@ -50,14 +48,12 @@ test(`A new member
       const sessionSpy = 
           jest.spyOn(Session.prototype, 'getListOfAttendees').
               mockReturnValue(['Jessica', 'Bryan', 'Miguel']);
-      sessionscript.buildAttendeeDiv('Jessica');
-      sessionscript.buildAttendeeDiv('Bryan');
       sessionscript.updateSessionInfoAttendees();
       expect(notifyOfChangesToMembershipSpy).
           toHaveBeenCalledWith(expectedMessage);
       expect(buildAttendeeDivSpy).toBeCalledTimes(1);
       expect(buildAttendeeDivSpy).toHaveBeenCalledWith('Miguel');
-      expect(removeFromAttendeeDivSpy).toBeCalledTimes(0);
+      expect(removeAttendeeDivSpy).toBeCalledTimes(0);
 });
 
 test(`A member that has left
@@ -76,21 +72,19 @@ test(`A member that has left
       const sessionSpy = 
           jest.spyOn(Session.prototype, 'getListOfAttendees').
               mockReturnValue(['Jessica']);
-      sessionscript.buildAttendeeDiv('Jessica');
-      sessionscript.buildAttendeeDiv('Bryan');
       sessionscript.updateSessionInfoAttendees();
       expect(notifyOfChangesToMembershipSpy).
           toHaveBeenCalledWith(expectedMessage);
       expect(buildAttendeeDivSpy).toBeCalledTimes(0);
-      expect(removeFromAttendeeDivSpy).toBeCalledTimes(1);
-      expect(removeFromAttendeeDivSpy).toBeCalledWith('Bryan');
+      expect(removeAttendeeDivSpy).toBeCalledTimes(1);
+      expect(removeAttendeeDivSpy).toBeCalledWith('Bryan');
 });
 
-test.skip(`A new member + a lost member' + 
+test(`A new member + a lost member' + 
     '-updateSessionInfoAttendees`, () => {
       const expectedMessage =
-          `The following people have joined the session: ${'Miguel'}. 
-          The folllowing people have left the session: ${'Bryan'}`;
+          'The following people have joined the session: ' + 'Miguel.' + 
+              ' The following people have left the session: ' + 'Bryan ';
       document.body.innerHTML = '';
       const sessionInfoAttendeeDiv =
           document.createElement('div');
@@ -103,13 +97,11 @@ test.skip(`A new member + a lost member' +
       const sessionSpy = 
           jest.spyOn(Session.prototype, 'getListOfAttendees').
               mockReturnValue(['Jessica', 'Miguel']);
-      sessionscript.buildAttendeeDiv('Jessica');
-      sessionscript.buildAttendeeDiv('Bryan');
       sessionscript.updateSessionInfoAttendees();
       expect(notifyOfChangesToMembershipSpy).
           toHaveBeenCalledWith(expectedMessage);
       expect(buildAttendeeDivSpy).toBeCalledTimes(1);
       expect(buildAttendeeDivSpy).toBeCalledWith('Miguel');
-      expect(removeFromAttendeeDivSpy).toBeCalledTimes(1);
-      expect(removeFromAttendeeDivSpy).toBeCalledWith('Bryan');
+      expect(removeAttendeeDivSpy).toBeCalledTimes(1);
+      expect(removeAttendeeDivSpy).toBeCalledWith('Bryan');
 });
