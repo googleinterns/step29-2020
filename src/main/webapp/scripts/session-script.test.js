@@ -1,13 +1,6 @@
 import * as sessionscript from './session-script';
 import { Session } from './session';
 
-const buildAttendeeDivSpy =
-    jest.spyOn(sessionscript, 'buildAttendeeDiv');
-const removeFromAttendeeDivSpy = 
-    jest.spyOn(sessionscript, 'removeFromAttendeeDiv');
-const notifyOfChangesToMembershipSpy =
-    jest.spyOn(sessionscript, 'notifyOfChangesToMembership');
-
 afterEach(() => {    
   jest.clearAllMocks();
 });
@@ -36,7 +29,6 @@ test('display block to none', () => {
 
 test('change display using both functions - open then close', () => {
   document.body.innerHTML = '<div id="container"></div>';
-  const anotherContainer = document.createElement('div');
   const container = document.getElementById('container');
   const div = document.createElement('div');
   div.style.display = 'none';
@@ -73,26 +65,6 @@ test('tests copy and paste', () => {
   document.execCommand = jest.fn();
   input.click();
   expect(document.execCommand).toHaveBeenCalledWith('copy');
-});
-
-test.skip(`makes sure notifyOfChangesToMembership is
- correctly displaying message`, (done) => {
-    const displayMessage = 'How are you ';
-    document.body.innerHTML = '';
-    const alertMembershipDiv =
-        document.createElement('div');
-    alertMembershipDiv.id = 'alert-membership';
-    document.body.appendChild(alertMembershipDiv);
-    sessionscript.notifyOfChangesToMembership(displayMessage);
-    setTimeout(() => {
-      expect(alertMembershipDiv.textContent).toEqual('How are you.');
-      expect(alertMembershipDiv.className).toEqual('display-message');
-      done();
-    }, 2000);
-    setTimeout(() => {
-      expect(alertMembershipDiv.className).toEqual('');
-      done();
-    }, 6000);
 });
 
 test('Tests to see if controller updates correctly UI wise', () => {

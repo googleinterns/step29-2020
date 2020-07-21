@@ -1,5 +1,5 @@
 // RFB holds the API to connect and communicate with a VNC server   
-//import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
+import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
 import { SessionCache } from '../scripts/sessioncache';
 import { Session } from '../scripts/session'
 
@@ -8,20 +8,7 @@ import { Session } from '../scripts/session'
  * refreshed. 
  * @type {number}
  */
-const REFRESH_CADENCE = 30000;
-
-/**
- * Represents (in miliseconds) how long users are alerted of any membership
- * changes in the session. 
- * @type {number}
- */
-const DISPLAY_CADENCE = 4000;
-
-/**
- * An array of who is currently in the session.
- * @type {Object}
- */
-let currentAttendees = [];
+const REFRESH_CADENCE_MS = 30000;
 
 /**
  * Represents a cache of the session, keeps in contact with server  
@@ -34,7 +21,7 @@ let sessionCache;
  * Represents the current session, a Session object.
  * @type {Object}
  */
-let session = new Session();
+let session;
 
 /**
  * Represents the noVNC client object; the single connection to the 
@@ -99,7 +86,7 @@ function refresh() {
   updateController();
   setTimeout(() => {
     refresh();
-  }, REFRESH_CADENCE);
+  }, REFRESH_CADENCE_MS);
 }
 
 /**
@@ -123,7 +110,7 @@ function updateController() {
       sessionInfoAttendeesDiv.querySelectorAll('span');
   if (urlParameters.get('name') === 
     session.getScreenNameOfController()) {
-      //sessionScreen.viewOnly = false;
+      sessionScreen.viewOnly = false;
     }
   controllerToggleList.forEach(function(individualSpanElement) {
     individualSpanElement.style.backgroundColor = '#fff';
