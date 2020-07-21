@@ -1,6 +1,6 @@
 /**
  * An array of who is currently in the session.
- * @type {Object}
+ * @type {Array}
  */
 let currentAttendees = [];
 
@@ -15,7 +15,7 @@ let session;
  * changes in the session. 
  * @type {number}
  */
-const DISPLAY_CADENCE = 4000;
+const DISPLAY_CADENCE_MS = 4000;
 
 /**
  * function updateSessionInfoAttendees() adds new attendees to the
@@ -23,44 +23,40 @@ const DISPLAY_CADENCE = 4000;
  * if they left the session. Alerts users of anyone who has left/entered.
  */
 function updateSessionInfoAttendees() {
-  const /** Object */ updatedAttendees = session.getListOfAttendees();
-  const /** Object */ newAttendees = [];
-  const /** Object */ attendeesThatHaveLeft = [];
-  for (const attendee of updatedAttendees) {
-    if (!currentAttendees.includes(attendee)) {
-      buildAttendeeDiv(attendee)
-      newAttendees.push(attendee);
-    }
-  }
-  for (const attendee of currentAttendees) {
-    if (!updatedAttendees.includes(attendee)) {
-      removeAttendeeDiv(attendee);
-      attendeesThatHaveLeft.push(attendee);
-    }
-  }
-  if (newAttendees.length) {
+  const /** Array */ updatedAttendees = session.getListOfAttendees();
+  const /** Array */ newAttendees = updatedAttendees.filter(attendee => {
+    return !currentAttendees.includes(attendee);
+  });
+  const /** Array */ attendeesThatHaveLeft = 
+      currentAttendees.filter(attendee => {
+        return !updatedAttendees.includes(attendee);
+  });
+  newAttendees.forEach(buildAttendeeDiv);
+  attendeesThatHaveLeft.forEach(removeAttendeeDiv);
+  if (newAttendees.length !== 0) {
     let /** string */ displayMessage =
         'The following people have joined the session: ';
-    for (const attendee of newAttendees) {
+    newAttendees.forEach(attendee => {
       displayMessage += `${attendee} `;
-    }
-    if (attendeesThatHaveLeft.length) {
+    });
+    if (attendeesThatHaveLeft.length !== 0) {
       displayMessage = 
           displayMessage.substring(0, displayMessage.length-1) + 
               '. The following people have left the session: ';
-      for (const attendee of attendeesThatHaveLeft) {
+      attendeesThatHaveLeft.forEach(attendee => {
         displayMessage += `${attendee} `;
-      }
+      });
     }
     notifyOfChangesToMembership(displayMessage);
-  } else if (!newAttendees.length && attendeesThatHaveLeft.length) {
-    let /** string */ displayMessage = 
-        'The following people have left the session: ';
-    for (const attendee of attendeesThatHaveLeft) {
-      displayMessage += `${attendee} `;
-    }
-    notifyOfChangesToMembership(displayMessage);
-  }
+  } else if (newAttendees.length === 0 && attendeesThatHaveLeft.length 
+        !== 0) {
+          let /** string */ displayMessage = 
+              'The following people have left the session: ';
+          attendeesThatHaveLeft.forEach(attendee => {
+            displayMessage += `${attendee} `;
+          });
+          notifyOfChangesToMembership(displayMessage);
+        }
   currentAttendees = updatedAttendees;
 }
 
@@ -77,7 +73,7 @@ function notifyOfChangesToMembership(displayMessage) {
   alertMembershipDiv.className = 'display-message';
   setTimeout(() => { 
     alertMembershipDiv.className = ''; 
-  }, DISPLAY_CADENCE);
+  }, DISPLAY_CADENCE_MS);
 }
 
 export { 

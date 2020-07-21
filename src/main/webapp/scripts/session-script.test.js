@@ -9,7 +9,7 @@ const notifyOfChangesToMembershipSpy =
     jest.spyOn(sessionscript.sessionScriptSpies,
         'notifyOfChangesToMembership');
 
-afterEach(() => {    
+afterEach(() => {   
   jest.clearAllMocks();
 });
 
@@ -53,7 +53,7 @@ test(`A new member
       expect(notifyOfChangesToMembershipSpy).
           toHaveBeenCalledWith(expectedMessage);
       expect(buildAttendeeDivSpy).toBeCalledTimes(1);
-      expect(buildAttendeeDivSpy).toHaveBeenCalledWith('Miguel');
+      expect(buildAttendeeDivSpy).toHaveBeenCalledWith('Miguel', 0, ['Miguel']);
       expect(removeAttendeeDivSpy).toBeCalledTimes(0);
 });
 
@@ -78,7 +78,7 @@ test(`A member that has left
           toHaveBeenCalledWith(expectedMessage);
       expect(buildAttendeeDivSpy).toBeCalledTimes(0);
       expect(removeAttendeeDivSpy).toBeCalledTimes(1);
-      expect(removeAttendeeDivSpy).toBeCalledWith('Bryan');
+      expect(removeAttendeeDivSpy).toBeCalledWith('Bryan', 0, ['Bryan']);
 });
 
 test(`A new member + a lost member' + 
@@ -102,9 +102,9 @@ test(`A new member + a lost member' +
       expect(notifyOfChangesToMembershipSpy).
           toHaveBeenCalledWith(expectedMessage);
       expect(buildAttendeeDivSpy).toBeCalledTimes(1);
-      expect(buildAttendeeDivSpy).toBeCalledWith('Miguel');
+      expect(buildAttendeeDivSpy).toBeCalledWith('Miguel', 0, ['Miguel']);
       expect(removeAttendeeDivSpy).toBeCalledTimes(1);
-      expect(removeAttendeeDivSpy).toBeCalledWith('Bryan');
+      expect(removeAttendeeDivSpy).toBeCalledWith('Bryan', 0, ['Bryan']);
 });
 
 test(`no update 
