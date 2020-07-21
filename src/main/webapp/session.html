@@ -10,15 +10,26 @@
         id="session-info-span" onclick="openSessionInfo()">
         <span id="session-info-span-text"><b>Who's here?</b></span></span>
   </div>
+  <div id="welcome-message">
+    <span class="close" onclick="closeDisplay(this)">X</span>
+    <p>Thank you for using Virtual Movie Night! 
+      Share the Session ID below with other party goers
+      to get the party started!
+    </p>
+    <label class="session-id-label" for="welcome-message-field">Session-ID:
+    </label>
+    <input type="text" class="session-id-field" id="welcome-message-field" 
+        name="session-id" onclick="copyTextToClipboard(this)">
+  </div>
   <div id="session-status" class="center-text">Connecting...</div>
   <div id="session-screen"></div>
   <div id="session-info-div">
-    <span id="close" onclick="closeSessionInfo()">X</span>
+    <span id="close" onclick="closeDisplay(this)">X</span>
     <div id="session-id-div">
       <label id="session-id-label" for="session-id-field">Session-ID:
       </label>
       <input type="text" id="session-id-field" name="session-id"
-          readonly onclick="copyTextToClipboard()">
+          onclick="copyTextToClipboard(this)">
     </div>
     <div id="session-info-attendees">
       <h2 class="center-text">Attendees</h2>
