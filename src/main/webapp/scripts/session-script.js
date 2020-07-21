@@ -13,6 +13,83 @@
 // limitations under the License.
 
 /**
+ * function updateSessionInfoAttendees() adds new attendees to the
+ * session to the session info attendee div. Also removes attendees 
+ * if they left the session. Alerts users of anyone who has left/entered.
+ */
+function updateSessionInfoAttendees() {
+  const /** Object */ updatedAttendees = session.getListOfAttendees();
+  const /** Object */ newAttendees = [];
+  const /** Object */ attendeesThatHaveLeft = [];
+  for (const attendee of updatedAttendees) {
+    if (!currentAttendees.includes(attendee)) {
+      exportFunctions.buildAttendeeDiv(attendee)
+      newAttendees.push(attendee);
+    }
+  }
+  for (const attendee of currentAttendees) {
+    if (!updatedAttendees.includes(attendee)) {
+      exportFunctions.removeFromAttendeeDiv(attendee);
+      attendeesThatHaveLeft.push(attendee);
+    }
+  }
+  if (newAttendees.length) {
+    let /** string */ displayMessage =
+        'The following people have joined the session: ';
+    for (const attendee of newAttendees) {
+      displayMessage += `${attendee} `;
+    }
+    if (attendeesThatHaveLeft.length) {
+      // displayMessage = `${displayMessage.
+      //   substring(0, displayMessage.length-1)}. The following people have
+      //   left the session: `;
+      displayMessage += '. The following people have left the session: ';
+      for (const attendee of attendeesThatHaveLeft) {
+        displayMessage += `${attendee} `;
+      }
+    }
+    exportFunctions.notifyOfChangesToMembership(displayMessage);
+  } else if (!newAttendees.length && attendeesThatHaveLeft.length) {
+    let /** string */ displayMessage = 
+        'The following people have left the session: ';
+    for (const attendee of attendeesThatHaveLeft) {
+      displayMessage += `${attendee} `;
+    }
+    exportFunctions.notifyOfChangesToMembership(displayMessage);
+  }
+  currentAttendees = updatedAttendees;
+}
+
+/**
+ * function notifyOfChangesToMembership() notifies 
+ * users of anyone who has left/entered.
+ * @param {string} displayMessage message to display to users
+ */
+function notifyOfChangesToMembership(displayMessage) {
+  displayMessage = `${displayMessage.
+      substring(0, displayMessage.length-1)}.`;
+  const alertMembershipDiv = document.getElementById('alert-membership');
+  alertMembershipDiv.textContent = displayMessage;
+  alertMembershipDiv.className = 'display-message';
+  setTimeout(() => { 
+    alertMembershipDiv.className = ''; 
+  }, DISPLAY_CADENCE);
+}
+
+const exportFunctions = {
+  buildAttendeeDiv,
+  notifyOfChangesToMembership,
+  removeFromAttendeeDiv
+}
+
+export default exportFunctions;
+
+export { openSessionInfo, copyTextToClipboard, 
+  buildAttendeeDiv, removeFromAttendeeDiv,
+  updateSessionInfoAttendees, notifyOfChangesToMembership };
+
+
+/**
  * function openSessionInfo() displays the div container
  * that has information about the session.
  */
