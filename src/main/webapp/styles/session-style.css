@@ -35,7 +35,7 @@ html {
   width: 400px;
 }
 
-#close {
+.close {
   cursor: pointer;
   padding: 12px 14px;
   position: absolute;
@@ -43,7 +43,7 @@ html {
   top: 0;
 }
 
-#close:hover {
+.close:hover {
   background: #bbb;
 }
 
@@ -80,11 +80,11 @@ html {
   width: 40%;
 }
 
-#session-id-label {
+.session-id-label {
   margin: 5px 10px 5px 10px;
 }
 
-#session-id-field {
+.session-id-field {
   background-color: #fff;
   border: 1px solid #ddd;
   margin: 5px 10px 5px 0;
@@ -106,4 +106,30 @@ html {
   padding: 5px 0 5px;
   text-align: center;
   width: 100%;
+}
+
+#welcome-message {
+  background-color: #fff;
+  border: 5px solid #fd5d00;
+  bottom: 0;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  display: none;
+  min-height: 200px;
+  height: 10%;
+  left: 0;
+  margin: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: .3s;
+  width: 400px;
+  display: block;
+}
+
+#welcome-message-content {
+  left: 50%;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
