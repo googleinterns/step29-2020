@@ -1,7 +1,7 @@
 // RFB holds the API to connect and communicate with a VNC server   
-//import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
+import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
 import { SessionCache } from '../scripts/sessioncache';
-//import { Session } from '../scripts/session'
+import { Session } from '../scripts/session'
 
 /**
  * Represents (in miliseconds) the cadence at which the client is 
@@ -64,7 +64,7 @@ window.onload = function() { main(); }
 function main() {
   sessionCache = new SessionCache(urlParameters);
   sessionCache.start();
-  sessionCache.getSessionInformation().then(sessionObject => {
+  sessionCache.getSession().then(sessionObject => {
     session = sessionObject;
   });
   remoteToSession(session.getIpOfVM());
@@ -74,7 +74,7 @@ function main() {
 /**
  * function remoteToSession() uses the noVNC library
  * in order to connect to a session.
- * @param {string} ipOfVM
+ * @param {string} ipOfVM required to connect to a session
  */
 function remoteToSession(ipOfVM) {
   const /** string */ url = `wss://${ipOfVM}:6080`;
@@ -92,7 +92,7 @@ function remoteToSession(ipOfVM) {
  * Checks for new attendees and for whoever the controller is.
  */
 function refresh() {
-  sessionCache.getSessionInformation().then(sessionObject => {
+  sessionCache.getSession().then(sessionObject => {
     session = sessionObject;
   });
   updateSessionInfoAttendees();
@@ -164,4 +164,4 @@ function disconnectedFromServer() {
 
 export { openSessionInfo, closeDisplay, copyTextToClipboard,  
   updateController, updateSessionInfoAttendees, remoteToSession, 
-  connectedToServer, disconnectedFromServer, urlParameters, session };
+  connectedToServer, disconnectedFromServer };

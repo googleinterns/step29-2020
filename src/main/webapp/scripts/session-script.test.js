@@ -1,11 +1,16 @@
 import * as sessionscript from './session-script';
 
 const buildAttendeeDivSpy =
-    jest.spyOn(exportFunctions, 'buildAttendeeDiv');
+    jest.spyOn(sessionscript, 'buildAttendeeDiv');
 const removeFromAttendeeDivSpy = 
-    jest.spyOn(exportFunctions, 'removeFromAttendeeDiv');
+    jest.spyOn(sessionscript, 'removeFromAttendeeDiv');
 const notifyOfChangesToMembershipSpy =
-    jest.spyOn(exportFunctions, 'notifyOfChangesToMembership');
+    jest.spyOn(sessionscript, 'notifyOfChangesToMembership');
+
+afterEach(() => {    
+  jest.clearAllMocks();
+  fetch.resetMocks();
+});
 
 test('display none to block', () => {
   document.body.innerHTML = '<div id="container"></div>';
@@ -70,27 +75,28 @@ test('tests copy and paste', () => {
   expect(document.execCommand).toHaveBeenCalledWith('copy');
 });
 
-test.skip('makes sure notifyOfChangesToMembership is correctly displaying message', (done) => {
-  const displayMessage = 'How are you ';
-  document.body.innerHTML = '';
-  const alertMembershipDiv =
-      document.createElement('div');
-  alertMembershipDiv.id = 'alert-membership';
-  document.body.appendChild(alertMembershipDiv);
-  sessionscript.notifyOfChangesToMembership(displayMessage);
-  setTimeout(() => {
-    expect(alertMembershipDiv.textContent).toEqual('How are you.');
-    expect(alertMembershipDiv.className).toEqual('display-message');
-    done();
-  }, 2000);
-  setTimeout(() => {
-    expect(alertMembershipDiv.className).toEqual('');
-    done();
-  }, 6000);
+test.skip(`makes sure notifyOfChangesToMembership is
+ correctly displaying message`, (done) => {
+    const displayMessage = 'How are you ';
+    document.body.innerHTML = '';
+    const alertMembershipDiv =
+        document.createElement('div');
+    alertMembershipDiv.id = 'alert-membership';
+    document.body.appendChild(alertMembershipDiv);
+    sessionscript.notifyOfChangesToMembership(displayMessage);
+    setTimeout(() => {
+      expect(alertMembershipDiv.textContent).toEqual('How are you.');
+      expect(alertMembershipDiv.className).toEqual('display-message');
+      done();
+    }, 2000);
+    setTimeout(() => {
+      expect(alertMembershipDiv.className).toEqual('');
+      done();
+    }, 6000);
 });
 
-test.skip('A new member' + 
-    '-updateSessionInfoAttendees', () => {
+test.skip(`A new member 
+    -updateSessionInfoAttendees`, () => {
       const expectedMessage =
           `The following people have joined the session: ${'Miguel'} `;
       document.body.innerHTML = '';
@@ -114,8 +120,8 @@ test.skip('A new member' +
       expect(removeFromAttendeeDivSpy).toBeCalledTimes(0);
 });
 
-test.skip('A lost member' + 
-    '-updateSessionInfoAttendees', () => {
+test.skip(`A member that has left
+    -updateSessionInfoAttendees`, () => {
       const expectedMessage =
           `The following people have left the session: ${'Bryan'} `;
       document.body.innerHTML = '';
@@ -140,8 +146,8 @@ test.skip('A lost member' +
       expect(removeFromAttendeeDivSpy).toBeCalledWith('Bryan');
 });
 
-test.skip('A new member + a lost member' + 
-    '-updateSessionInfoAttendees', () => {
+test.skip(`A new member + a lost member' + 
+    '-updateSessionInfoAttendees`, () => {
       const expectedMessage =
           `The following people have joined the session: ${'Miguel'}. 
           The folllowing people have left the session: ${'Bryan'}`;
