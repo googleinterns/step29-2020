@@ -1,4 +1,4 @@
-import { Session } from "./session";
+import { Session } from './session';
 
 /**
  * An array of who is currently in the session.
@@ -17,7 +17,7 @@ let session;
  * of any membership changes in the session is displayed. 
  * @type {number}
  */
-const DISPLAY_PERIOD_MS = 4000;
+const MESSAGE_DURATION_MS = 4000;
 
 /**
  * function updateSessionInfoAttendees() adds new attendees to the
@@ -75,7 +75,7 @@ function notifyOfChangesToMembership(displayMessage) {
   alertMembershipDiv.className = 'display-message';
   setTimeout(() => { 
     alertMembershipDiv.className = ''; 
-  }, DISPLAY_PERIOD_MS);
+  }, MESSAGE_DURATION_MS);
 }
 
 export { 
