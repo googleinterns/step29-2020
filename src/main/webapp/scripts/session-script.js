@@ -1,3 +1,5 @@
+import { Session } from "./session";
+
 /**
  * An array of who is currently in the session.
  * @type {Array}
@@ -6,16 +8,16 @@ let currentAttendees = [];
 
 /**
  * Represents the current session, a Session object.
- * @type {Object}
+ * @type {Session}
  */
 let session;
 
 /**
- * Represents (in miliseconds) how long users are alerted of any membership
- * changes in the session. 
+ * Represents (in miliseconds) how long the message that alerts users
+ * of any membership changes in the session is displayed. 
  * @type {number}
  */
-const DISPLAY_CADENCE_MS = 4000;
+const DISPLAY_PERIOD_MS = 4000;
 
 /**
  * function updateSessionInfoAttendees() adds new attendees to the
@@ -33,13 +35,13 @@ function updateSessionInfoAttendees() {
   });
   newAttendees.forEach(buildAttendeeDiv);
   attendeesThatHaveLeft.forEach(removeAttendeeDiv);
-  if (newAttendees.length !== 0) {
+  if (newAttendees.length > 0) {
     let /** string */ displayMessage =
         'The following people have joined the session: ';
     newAttendees.forEach(attendee => {
       displayMessage += `${attendee} `;
     });
-    if (attendeesThatHaveLeft.length !== 0) {
+    if (attendeesThatHaveLeft.length > 0) {
       displayMessage = 
           displayMessage.substring(0, displayMessage.length-1) + 
               '. The following people have left the session: ';
@@ -49,7 +51,7 @@ function updateSessionInfoAttendees() {
     }
     notifyOfChangesToMembership(displayMessage);
   } else if (newAttendees.length === 0 && attendeesThatHaveLeft.length 
-        !== 0) {
+        > 0) {
           let /** string */ displayMessage = 
               'The following people have left the session: ';
           attendeesThatHaveLeft.forEach(attendee => {
@@ -73,7 +75,7 @@ function notifyOfChangesToMembership(displayMessage) {
   alertMembershipDiv.className = 'display-message';
   setTimeout(() => { 
     alertMembershipDiv.className = ''; 
-  }, DISPLAY_CADENCE_MS);
+  }, DISPLAY_PERIOD_MS);
 }
 
 export { 
