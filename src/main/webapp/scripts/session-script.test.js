@@ -97,8 +97,8 @@ test('Tests to see if controller updates correctly UI wise', () => {
 test('tests changeToReadOnly()', () => {
   document.body.innerHTML = '';
   const sessionSpy = 
-  jest.spyOn(Session.prototype, 'getScreenNameOfController').
-      mockReturnValue('1eee3414123');
+      jest.spyOn(Session.prototype, 'getScreenNameOfController').
+          mockReturnValue('1eee3414123');
   const sessionInfoInput = document.createElement('input');
   sessionInfoInput.id = 'session-info-input';
   const welcomeMessageInput = document.createElement('input');
@@ -123,15 +123,6 @@ test(`We can check if correct errors are thrown -
     ${'disconnectedFromServer'}`, () => {
       try {
         sessionscript.disconnectedFromServer();
-      } catch (e) {
-        expect(e.message).toBe('Unimplemented');
-      }
-});
-
-test(`We can check if correct errors are thrown - 
-    ${'updateSessionInfoAttendees'}`, () => {
-      try {
-        sessionscript.updateSessionInfoAttendees();
       } catch (e) {
         expect(e.message).toBe('Unimplemented');
       }
