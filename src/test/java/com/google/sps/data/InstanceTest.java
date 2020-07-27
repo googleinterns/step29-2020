@@ -1,5 +1,3 @@
-package com.google.sps;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +56,7 @@ public class InstanceTest {
     InstanceInterface instance = new Instance("vm1", "Running", sessionId);
     Entity instanceEntity = instance.toEntity();
     Instance newInstance = Instance.fromEntity(instanceEntity);
-    Assert.assertTrue(instance.equals(newInstance));  
+    Assert.assertTrue(instance.isEqualTo(newInstance));  
   }
 
   @Test
