@@ -3,6 +3,13 @@ import { ServerClient } from './serverclient.js';
 import { Session } from './session.js';
 
 /**
+ * Represents (in miliseconds) the cadence at which the session is
+ * refreshed. 
+ * @type {number}
+ */
+const SESSION_REFRESH_CADENCE_MS = 30000;
+
+/**
  * Represents the noVNC client object; the single connection to the 
  * VNC server.
  * @type {RFB}
@@ -63,6 +70,33 @@ function remoteToSession(ipOfVM, sessionId) {
   sessionScreen.addEventListener('disconnect', disconnectedFromServer);
   sessionScreen.viewOnly = true;
   document.getElementById('welcome-message').style.display = 'block';
+}
+
+/**
+ * function connectedToServer() is called on once the session connects.
+ */
+function connectedToServer() {
+  document.getElementById('session-status').style.display = 'none';
+  isConnected = true;
+}
+
+/**
+ * function disconnectedFromServer() is called on once the session
+ * disconnects.
+ */
+function disconnectedFromServer() {
+  document.getElementById('session-status').style.display = 'block';
+  let setIntervalId = setInterval(() => {
+    if(!isConnected) {
+      client.getSession().then(session => {
+        remoteToSession(session.getIpOfVM(), session.getSessionId());
+      }).catch(error => {
+        window.alert(error);
+      });
+    } else {
+      clearInterval(setIntervalId);
+    }
+  }, SESSION_REFRESH_CADENCE_MS);
 }
 
 /**
