@@ -66,25 +66,25 @@ function remoteToSession(ipOfVM, sessionId) {
   const /** string */ url = `wss://${ipOfVM}:6080`;
   sessionScreen = new RFB(document.getElementById('session-screen'), url,
       { credentials: { password: sessionId } });
-  sessionScreen.addEventListener('connect', connectedToServer);
-  sessionScreen.addEventListener('disconnect', disconnectedFromServer);
+  sessionScreen.addEventListener('connect', connectedToSession);
+  sessionScreen.addEventListener('disconnect', disconnectedFromSession);
   sessionScreen.viewOnly = true;
   document.getElementById('welcome-message').style.display = 'block';
 }
 
 /**
- * function connectedToServer() is called on once the session connects.
+ * function connectedToSession() is called on once the session connects.
  */
-function connectedToServer() {
+function connectedToSession() {
   document.getElementById('session-status').style.display = 'none';
   isConnected = true;
 }
 
 /**
- * function disconnectedFromServer() is called on once the session
+ * function disconnectedFromSession() is called on once the session
  * disconnects.
  */
-function disconnectedFromServer() {
+function disconnectedFromSession() {
   document.getElementById('session-status').style.display = 'block';
   isConnected = false;
   let /** number */ setIntervalId = setInterval(() => {
