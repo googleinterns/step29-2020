@@ -86,7 +86,8 @@ function connectedToServer() {
  */
 function disconnectedFromServer() {
   document.getElementById('session-status').style.display = 'block';
-  let setIntervalId = setInterval(() => {
+  isConnected = false;
+  let /** number */ setIntervalId = setInterval(() => {
     if(!isConnected) {
       client.getSession().then(session => {
         remoteToSession(session.getIpOfVM(), session.getSessionId());
