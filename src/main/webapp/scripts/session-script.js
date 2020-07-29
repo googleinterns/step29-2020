@@ -1,16 +1,53 @@
-// Copyright 2019 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
+import { ServerClient } from './serverclient.js';
+import { Session } from './session.js';
+
+/**
+ * Represents the noVNC client object; the single connection to the 
+ * VNC server.
+ * @type {RFB}
+ */
+let sessionScreen;
+
+/**
+ * Represents the current state of the session in terms of whether or not
+ * the sessionScreen is connected.
+ */
+let isConnected = false;
+
+/**
+ * Represents the URLSearchParams of the
+ * the client is in, holds information such as the
+ * session ID and the screen name of the current user.
+ * @type {URLSearchParams}
+ */
+const urlParameters = new URLSearchParams(window.location.search);
+
+/**
+ * Represents the ServerClient object responsible for
+ * keeping up-to-date with the current session and handles many
+ * of the client-to-server interactions, like passing the controller.
+ * @type {ServerClient}
+ */
+const client = new ServerClient(urlParameters);
+
+/**
+ * This waits until the webpage loads and then it calls the
+ * anonymous function, which calls main.
+ */
+window.onload = function() { main(); }
+
+/**
+ * function main() connects the client to a session and begins many of
+ * the behind the scenes operations, like caching.
+ */
+function main() {
+  client.getSession().then(session => {
+    remoteToSession(session.getIpOfVM());
+  }).catch(error => {
+    window.alert(error);
+  });
+}
 
 /**
  * function openSessionInfo() displays the div container
