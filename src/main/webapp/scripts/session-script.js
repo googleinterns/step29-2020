@@ -43,10 +43,26 @@ window.onload = function() { main(); }
  */
 function main() {
   client.getSession().then(session => {
-    remoteToSession(session.getIpOfVM());
+    remoteToSession(session.getIpOfVM(), session.getSessionId());
   }).catch(error => {
     window.alert(error);
   });
+}
+
+/**
+ * function remoteToSession() uses the noVNC library
+ * in order to connect to a session.
+ * @param {string} ipOfVM
+ * @param {string} sessionId
+ */
+function remoteToSession(ipOfVM, sessionId) {
+  const /** string */ url = `wss://${ipOfVM}:6080`;
+  sessionScreen = new RFB(document.getElementById('session-screen'), url,
+      { credentials: { password: sessionId } });
+  sessionScreen.addEventListener('connect', connectedToServer);
+  sessionScreen.addEventListener('disconnect', disconnectedFromServer);
+  sessionScreen.viewOnly = true;
+  document.getElementById('welcome-message').style.display = 'block';
 }
 
 /**
