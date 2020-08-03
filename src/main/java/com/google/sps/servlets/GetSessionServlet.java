@@ -34,7 +34,8 @@ public class GetSessionServlet extends HttpServlet {
       List<AttendeeInterface> listOfAttendees = datastoreClient.getAttendeesInSession(sessionId);
       Gson gson = new Gson();
       JsonElement jsonElement = gson.toJsonTree(session.get());
-      jsonElement.getAsJsonObject().addProperty("listOfAttendees", gson.toJson(listOfAttendees));
+      jsonElement.getAsJsonObject().
+          add("listOfAttendees", gson.toJsonTree(listOfAttendees).getAsJsonArray());
       String json = gson.toJson(jsonElement);
       response.setContentType("application/json;");
       response.getWriter().println(json);

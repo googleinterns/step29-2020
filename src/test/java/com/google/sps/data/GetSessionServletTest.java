@@ -69,7 +69,8 @@ public class GetSessionServletTest {
     List<AttendeeInterface> listOfAttendees = Arrays.asList(expectedAttendee);
     Gson gson = new Gson();
     JsonElement jsonElement = gson.toJsonTree(expectedSession);
-    jsonElement.getAsJsonObject().addProperty("listOfAttendees", gson.toJson(listOfAttendees));
+    jsonElement.getAsJsonObject().
+        add("listOfAttendees", gson.toJsonTree(listOfAttendees).getAsJsonArray());
     String expectedJson = gson.toJson(jsonElement);
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
