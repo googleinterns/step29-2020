@@ -14,12 +14,12 @@
    * Initializes a Poller object.
    * @param {function(): any} pollingFunction Represents the function 
    *    that is polled.
-   * @param {number=} [pollingPeriod = 30000] Represents the 
+   * @param {number=} [pollingPeriodMs = 30000] Represents the 
    *    cadence at which the pollingFunction is called upon. 
    *    Must be provided in milliseconds and is by default
    *    30,000 milliseconds (or 30 seconds). 
    */
-  constructor(pollingFunction, pollingPeriod = 30000) {
+  constructor(pollingFunction, pollingPeriodMs = 30000) {
     /** 
      * Represents the output of the pollingFunction, is constantly
      * being updated.
@@ -30,7 +30,7 @@
     /**
      * @private {number}
      */
-    this.pollingPeriod_ = pollingPeriod;
+    this.pollingPeriodMs_ = pollingPeriodMs;
 
     /**
      * Represents the handler returned by the setTimeout that continues
@@ -46,7 +46,7 @@
   }
 
   /**
-   * This method periodically executes (time dictated by pollingPeriod)
+   * This method periodically executes (time dictated by pollingPeriodMs)
    * the pollingFunction, updating the result.
    * @private
    */ 
@@ -54,7 +54,7 @@
     this.result_ = this.pollingFunction_();
     this.setTimeoutId_ = setTimeout(() => {
       this.poll_();
-    }, this.pollingPeriod_);
+    }, this.pollingPeriodMs_);
   }
 
   /** 

@@ -16,18 +16,18 @@ class SessionCache {
    * @param {function(): Promise<any>} sessionRequest Represents
    *    the fetch api request responsible for contacting the server
    *    to retrieve the Session object.
-   * @param {number=} [refreshCadence = 30000] Represents the cadence at
+   * @param {number=} [refreshCadenceMs = 30000] Represents the cadence at
    *    which the Session object is refreshed. By default, the rate is
    *    30,000 milliseconds (or 30 seconds).  
    */
-  constructor(sessionRequest, refreshCadence = 30000) {
+  constructor(sessionRequest, refreshCadenceMs = 30000) {
     /** 
      * Poller responsible for contacting the server to retrieve the Session
      * object.
      * @private {Poller} 
      */
     this.sessionPoller_ = 
-        new Poller(sessionRequest, refreshCadence);
+        new Poller(sessionRequest, refreshCadenceMs);
   }
 
   /** 

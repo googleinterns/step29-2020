@@ -1,110 +1,79 @@
-import { ServerClient } from './serverclient.js';
 import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
 
-class noVNCClient {
+/**
+ * The NoVNCClient class essentially surrounds the RFB object of the noVNC
+ * library, takes care of remoting, what happens if someone connects, 
+ * and what happens if someone disconnects. The class also allows for 
+ * additional functionality that are specific to the scope of Virtual Movie
+ * Night, like changing the viewOnly property of the RFB object (or all
+ * owing who is able to controll).
+ */
+class NoVNCClient {
   /**
-   * Initalizes a noVNCClient object.
-   * @param {ServerClient} serverClient Represents the ServerClient object 
-   *    responsible for keeping up-to-date with the current session and
-   *    handles many of the client-to-server interactions, 
-   *    like passing the controller.
-   * @param {number=} [reconnectCadence = 30000] Represents the rate at 
-   *    which the noVNC RFB object attempts to reconnect if it goes down.
-   *    By default, is 30,000 milliseconds
+   * Initalizes a NoVNCClient object.
+   * @param {function(): void} connectCallback This function is called 
+   *    once the rfbConnection connects.
+   * @param {function(): void} disconnectCallback This function is called
+   *    once the rfbConnection disconnects.
+   * @param {HTMLElement} rfbConnectionElement A block HTMLElement that 
+   *    specifies where the RFB object should attach itself.
    */
-  constructor(serverClient, reconnectCadence = 30000) {
+  constructor(connectCallback, disconnectCallback, rfbConnectionElement) {
     /**
-     * Represents the current noVNC RFB object of the 
-     * session, the single connection to the VNC server of the
-     * VM assigned to the session.
+     * Represents the current noVNC RFB object of the session. The RFB
+     * object is defined as the single connection to the VNC server of the
+     * VM assigned to the session. The interface of the noVNC client 
+     * consists of this single RFB object and all of the functionality of
+     * the library resides in this object. 
      * @private {RFB}
      */
-    this.sessionScreen_ = null; 
+    this.rfbConnection_ = null; 
+
+    /** 
+     * @private {function(): void}
+     */
+    this.connectCallback_ = connectCallback;
+
+    /** 
+     * @private {function(): void}
+     */
+    this.disconnectCallback_ = disconnectCallback;
 
     /**
-     * @private {number}
+     * @private {HTMLElement}
      */
-    this.reconnectCadenceMS_ = reconnectCadence;
-
-    /**
-     * @private {ServerClient}
-     */
-    this.serverClient_ = serverClient;
-
-    /**
-     * Represents the current state of the sessionScreen in terms of 
-     * whether or not it is connected.
-     * @private {boolean}
-     */
-    this.isConnected_ = false;
-
-    this.remoteToSession_();
+    this.rfbConnectionElement_ = rfbConnectionElement;
   }
 
   /**
    * Method remoteToSession() uses the noVNC library
    * in order to connect to a session.
-   * @param {string} ipOfVM
-   * @param {string} sessionId
+   * @param {string} ipOfVM the ip adress of the VM assigned to the 
+   *    session.
+   * @param {string} sessionId represents the id of the current session.
    */
-  remoteToSession_(ipOfVM, sessionId) {
-    const /** string */ url = `wss://${ipOfVM}:6080`;
-    this.sessionScreen_ = 
-        new RFB(document.getElementById('session-screen'), url,
-            { credentials: { password: sessionId } });
-    this.sessionScreen_.addEventListener('connect', connectedToSession);
-    this.sessionScreen_.addEventListener('disconnect', disconnectedFromSession);
-    this.sessionScreen_.viewOnly = true;
-    document.getElementById('welcome-message').style.display = 'block';
+  remoteToSession(ipOfVM, sessionId) {
+    throw new Error('Unimplemented');
   }
 
   /**
-   * Method connectedToSession() is called on once the sessionScreen 
-   * connects.
-   * @private
+   * Method disconnect() disconnects from the server.
    */
-  connectedToSession_() {
-    document.getElementById('session-status').style.display = 'none';
-    this.isConnected_ = true;
+  disconnect() {
+    throw new Error('Unimplemeted');
   }
 
   /**
-   * Method disconnectedFromSession() is called on once the sessionScreen
-   * disconnects.
-   * @private
+   * Method setViewOnly() changes the viewOnly property of the current
+   * rfbConnection to be what is passed in.
+   * @param {boolean} viewOnly is a boolean indicating if any events
+   *    (e.g. key presses or mouse movement) should be prevented from 
+   *    being sent to the server.
    */
-  disconnectedFromSession_() {
-    document.getElementById('session-status').style.display = 'block';
-    this.isConnected_ = false;
-    let /** number */ setIntervalId = setInterval(() => {
-      if(!this.isConnected_) {
-        client.getSession().then(session => {
-          remoteToSession(session.getIpOfVM(), session.getSessionId());
-        }).catch(error => {
-          window.alert(error);
-        });
-      } else {
-        clearInterval(setIntervalId);
-      }
-    }, this.RECONNECT_CADENCE_MS_);
-  }
-
-  /**
-   * Method changeViewOnly() changes the view only of the current RFB object
-   * to be opposite of what it currently is.
-   */
-  changeViewOnly() {
-    throw new Error('Unimpleneted');
-  }
-
-  /**
-   * Method getConnectionStatus() returns the current status of the 
-   * current RFB object.
-   */
-  getConnectionStatus() {
-    throw new Error('Unimpleneted');
+  setViewOnly(viewOnly) {
+    throw new Error('Unimplemented');
   }
 }
 
-export { novncClient }
+export { NoVNCClient }
 
