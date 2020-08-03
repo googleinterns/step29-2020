@@ -25,6 +25,7 @@ public class ChangeControllerServlet extends HttpServlet {
     String name = URLDecoder.decode(request.getParameter("name"), StandardCharsets.UTF_8);
     Optional<SessionInterface> sessionInterface = datastoreClient.getSession(sessionId);
     if(sessionInterface.isPresent() && sessionInterface.get()!=null) {
+      System.out.println("hello");
       SessionInterface updatedSession =
           new Session(sessionId, Optional.of(name), sessionInterface.get().getIpOfVM());
       datastoreClient.insertOrUpdateSession(updatedSession);
