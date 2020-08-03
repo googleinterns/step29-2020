@@ -1,4 +1,4 @@
-import { SessionCache } from './sessioncache';
+import { SessionCache } from './sessioncache.js';
 import { Session } from './session.js';
 import fetch from 'jest-fetch-mock';
 
