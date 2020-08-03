@@ -1,4 +1,19 @@
 import * as sessionscript from './session-script';
+import { ServerClient } from './serverclient';
+import fetch from 'jest-fetch-mock';
+
+fetch.enableMocks();
+
+const changeControllerToSpy = 
+    jest.spyOn(ServerClient.prototype, 'changeControllerTo');
+const urlParamSpy = 
+    jest.spyOn(window.URLSearchParams.prototype, 'get').
+        mockReturnValue('Jessica');
+
+afterEach(() => {
+  jest.clearAllMocks();
+  fetch.resetMocks();
+})
 
 test('display none to block', () => {
   document.body.innerHTML = '<div id="container"></div>';
@@ -77,6 +92,49 @@ test('addOnClickTo', () => {
   document.execCommand = jest.fn();
   sessionIdInput.click();
   expect(document.execCommand).toHaveBeenCalledWith('copy');
+});
+
+test('adding an attendee div', () => {
+  document.body.innerHTML = '';
+  const sessionInfoAttendeeDiv =
+      document.createElement('div');
+  sessionInfoAttendeeDiv.id = 'session-info-attendees';
+  document.body.appendChild(sessionInfoAttendeeDiv);
+  sessionscript.buildAttendeeDiv('hello', 'Bryan'); 
+  expect(sessionInfoAttendeeDiv.querySelector('h3').id).toEqual('hello');
+});
+
+test('tests changeControllerTo() - controller clicks', () => {
+  const attendeeDiv = document.createElement('div');
+  const controllerToggle = 
+      document.createElement('span');
+  controllerToggle.addEventListener('click', event => {
+    sessionscript.changeControllerTo(event, 'Jessica');
+  }, false);
+  const attendeeName = document.createElement('h3');
+  attendeeName.id = 'Naomi';
+  attendeeDiv.appendChild(controllerToggle);
+  attendeeDiv.appendChild(attendeeName);
+  document.body.appendChild(attendeeDiv);
+  controllerToggle.click();
+  expect(changeControllerToSpy).toBeCalledWith('Naomi');
+});
+
+test('tests changeControllerTo() - controller does not click', () => {
+  const attendeeDiv = document.createElement('div');
+  const controllerToggle = 
+      document.createElement('span');
+  controllerToggle.addEventListener('click', event => {
+    sessionscript.changeControllerTo(event, 'Bob');
+  }, false);
+  const attendeeName =
+      document.createElement('h3');
+  attendeeName.id = 'Bob';
+  attendeeDiv.appendChild(controllerToggle);
+  attendeeDiv.appendChild(attendeeName);
+  document.body.appendChild(attendeeDiv);
+  controllerToggle.click();
+  expect(changeControllerToSpy).toBeCalledTimes(0);
 });
 
 /**
