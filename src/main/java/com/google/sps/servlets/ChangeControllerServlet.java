@@ -24,14 +24,11 @@ public class ChangeControllerServlet extends HttpServlet {
         URLDecoder.decode(request.getParameter("session-id"), StandardCharsets.UTF_8);
     String name = URLDecoder.decode(request.getParameter("name"), StandardCharsets.UTF_8);
     Optional<SessionInterface> sessionInterface = datastoreClient.getSession(sessionId);
-    if(sessionInterface.isPresent() && sessionInterface.get()!=null) {
-      System.out.println("hello");
+    if(sessionInterface.isPresent()) {
       SessionInterface updatedSession =
           new Session(sessionId, Optional.of(name), sessionInterface.get().getIpOfVM());
       datastoreClient.insertOrUpdateSession(updatedSession);
       response.setStatus(HttpServletResponse.SC_OK);
-      return;
     }
-    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
   }
 }
