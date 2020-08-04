@@ -17,6 +17,15 @@ let urlParameters;
 let serverClient;
 
 /**
+ * Surrounds the noVNC library, providing many of its functionality in the
+ * context necessary for Virtual Movie Night. Allows for remoting into a
+ * session, handles disconnecting and connecting, and allows one to change
+ * who can interact with the virtual machines.
+ * @type {NoVNCClient}
+ */
+let novncClient;
+
+/**
  * This object represents the two keys that are a part 
  * of the URLSearchParams of the given session. They convey the current
  * screen name of the current user and the session-id they are in.
@@ -26,6 +35,20 @@ const URL_PARAM_KEY = {
   SCREEN_NAME: 'name',
   SESSION_ID: 'session-id'
 };
+
+/**
+ * Represents the current state of the novncClient in terms of whether or
+ * not it is connected.
+ * @type {boolean}
+ */
+let isConnected = false;
+
+/**
+ * Represents (in miliseconds) the cadence at which the session is
+ * refreshed. 
+ * @type {number}
+ */
+const SESSION_REFRESH_CADENCE_MS = 30000;
 
 /**
  * This waits until the webpage loads and then it calls the
@@ -40,6 +63,9 @@ window.onload = function() { main(); }
 function main() {
   urlParameters = new URLSearchParams(window.location.search);
   serverClient = new ServerClient(urlParameters);
+  novncClient = new NoVNCClient(
+      connectCallback, disconnectCallback, 
+          document.getElementById('session-screen'));
   addOnClickListenerToElements();
   serverClient.getSession().then(session => {
     setReadOnlyInputs(session.getSessionId());
