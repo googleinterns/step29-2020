@@ -35,7 +35,7 @@ let novncClient;
 const URL_PARAM_KEY = {
   SCREEN_NAME: 'name',
   SESSION_ID: 'session-id'
-};c
+};
 
 /**
  * An array of who is currently in the session.
@@ -146,7 +146,7 @@ function updateUI() {
  * session to the session info attendee div. Also removes attendees 
  * if they left the session. Alerts users of anyone who has left/entered.
  * @param {Array} updatedAttendees array of new attendees
- * @param {string} controller
+ * @param {string} controller name of the controller of the session
  */
 function updateSessionInfoAttendees(updatedAttendees, controller) {
   const /** Array */ newAttendees = updatedAttendees.filter(attendee => {
@@ -246,7 +246,7 @@ function changeControllerTo(event, controller) {
  * function updateController() checks to see if the current user should
  * be the controller of their party, changing session screen privilege
  * and updating user interface.
- * @param {string} controller
+ * @param {string} controller name of the controller of the session
  */
 function updateController(controller) {
   const /** HTMLElement */ sessionInfoAttendeesDiv =
