@@ -5,9 +5,9 @@
 # initiates noVNC's Websocket to TCP proxy/bridge Websockify.
 #
 set -e
-# This URL accesses the metadata value of key "session-id" of the current
+# This URL accesses the metadata value of key "vnc-server-password" of the current
 # VM, it will be used as a password to connect to the VNCServer.
-PASSWRD=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/session-id -H "Metadata-Flavor: Google")
+PASSWRD=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/vnc-server-password -H "Metadata-Flavor: Google")
 VNCPASSWD_PATH=~/.vnc/passwd
 export USER=/root
 apt-get update
