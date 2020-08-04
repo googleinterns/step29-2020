@@ -51,6 +51,13 @@ let isConnected = false;
 const SESSION_REFRESH_CADENCE_MS = 30000;
 
 /**
+ * Represents (in miliseconds) how long the message that alerts users
+ * of any membership changes in the session is displayed. 
+ * @type {number}
+ */
+const MESSAGE_DURATION_MS = 4000;
+
+/**
  * This waits until the webpage loads and then it calls the
  * anonymous function, which calls main.
  */
@@ -69,6 +76,7 @@ function main() {
   addOnClickListenerToElements();
   serverClient.getSession().then(session => {
     setReadOnlyInputs(session.getSessionId());
+    updateUI();
   }).catch(error => {
     window.alert('No contact with the server!');
   });
@@ -109,6 +117,21 @@ function setReadOnlyInputs(sessionId) {
       document.getElementById('welcome-message-input');
   welcomeMessageInput.value = sessionId;
   welcomeMessageInput.readOnly = true;
+}
+
+/*
+ * function updateUI() refreshes information client side, 
+ * updating the UI in checking for new attendees and for
+ * whoever the controller is.
+ */
+function updateUI() {
+  setInterval(() => {
+    client.getSession().then(session => {
+      updateSessionInfoAttendees(session.getListOfAttendees(),
+          session.getScreenNameOfController());
+      updateController(session.getScreenNameOfController());
+    });
+  }, SESSION_REFRESH_CADENCE_MS);
 }
 
 /**
