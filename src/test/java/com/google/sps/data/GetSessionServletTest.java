@@ -36,10 +36,8 @@ public class GetSessionServletTest {
 
   @Mock
   HttpServletRequest request;
-
   @Mock
   HttpServletResponse response;
-
   @Spy
   GetSessionServlet servlet = new GetSessionServlet();
 

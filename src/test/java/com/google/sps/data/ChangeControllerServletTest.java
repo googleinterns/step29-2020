@@ -21,13 +21,11 @@ public class ChangeControllerServletTest {
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
   private final DatastoreClientInterface datastoreClient = new DatastoreClient();
-
+  
   @Mock
   HttpServletRequest request;
-
   @Mock
   HttpServletResponse response;
-
   @Spy
   ChangeControllerServlet servlet = new ChangeControllerServlet();
 
