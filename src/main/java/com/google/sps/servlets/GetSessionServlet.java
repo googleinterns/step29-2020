@@ -29,14 +29,18 @@ public class GetSessionServlet extends HttpServlet {
     String name = URLDecoder.decode(request.getParameter("name"), StandardCharsets.UTF_8);
     AttendeeInterface updatedAttendee = new Attendee(sessionId, name, new Date());
     datastoreClient.insertOrUpdateAttendee(updatedAttendee);
-    Optional<SessionInterface> session = datastoreClient.getSession(sessionId);
-    if (session.isPresent()) {
+    Optional<SessionInterface> optionalSession = datastoreClient.getSession(sessionId);
+    if (!optionalSession.isPresent()) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      return;
+    } else {
       List<AttendeeInterface> listOfAttendees = datastoreClient.getAttendeesInSession(sessionId);
       Gson gson = new Gson();
-      JsonElement jsonElement = gson.toJsonTree(session.get());
+      JsonElement jsonElement = gson.toJsonTree(optionalSession.get());
       jsonElement.getAsJsonObject().
           add("listOfAttendees", gson.toJsonTree(listOfAttendees).getAsJsonArray());
       String json = gson.toJson(jsonElement);
+      response.setStatus(HttpServletResponse.SC_OK);
       response.setContentType("application/json;");
       response.getWriter().println(json);
     }
