@@ -181,6 +181,21 @@ function updateSessionInfoAttendees(updatedAttendees, controller) {
 }
 
 /**
+ * function notifyOfChangesToMembership() notifies 
+ * users the message that's passed in.
+ * @param {string} displayMessage message to display to users
+ */
+function notifyOfChangesToMembership(displayMessage) {
+  displayMessage += '.';
+  const alertMembershipDiv = document.getElementById('alert-membership');
+  alertMembershipDiv.textContent = displayMessage;
+  alertMembershipDiv.className = 'display-message';
+  setTimeout(() => { 
+    alertMembershipDiv.className = ''; 
+  }, MESSAGE_DURATION_MS);
+}
+
+/**
  * function buildAttendeeDiv() adds the div element containing
  * all the elements representing an attendee to the session info
  * attendees div.
