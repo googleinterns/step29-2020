@@ -34,7 +34,13 @@ let novncClient;
 const URL_PARAM_KEY = {
   SCREEN_NAME: 'name',
   SESSION_ID: 'session-id'
-};
+};c
+
+/**
+ * An array of who is currently in the session.
+ * @type {Array}
+ */
+let currentAttendees = [];
 
 /**
  * Represents the current state of the novncClient in terms of whether or
@@ -132,6 +138,46 @@ function updateUI() {
       updateController(session.getScreenNameOfController());
     });
   }, SESSION_REFRESH_CADENCE_MS);
+}
+
+/**
+ * function updateSessionInfoAttendees() adds new attendees to the
+ * session to the session info attendee div. Also removes attendees 
+ * if they left the session. Alerts users of anyone who has left/entered.
+ * @param {Array} updatedAttendees array of new attendees
+ * @param {string} controller
+ */
+function updateSessionInfoAttendees(updatedAttendees, controller) {
+  const /** Array */ newAttendees = updatedAttendees.filter(attendee => {
+    return !currentAttendees.includes(attendee);
+  });
+  const /** Array */ attendeesThatHaveLeft = 
+      currentAttendees.filter(attendee => {
+        return !updatedAttendees.includes(attendee);
+  });
+  if (newAttendees.length > 0) {
+    let /** string */ displayMessage =
+        'The following people have joined the session: ';
+    displayMessage += newAttendees.join(', ');
+    if (attendeesThatHaveLeft.length > 0) {
+      displayMessage += '. The following people have left the session: ';
+      displayMessage += attendeesThatHaveLeft.join(', ');
+    }
+    notifyOfChangesToMembership(displayMessage);
+  } else if (newAttendees.length === 0 && attendeesThatHaveLeft.length 
+        > 0) {
+          let /** string */ displayMessage = 
+              'The following people have left the session: ';
+          displayMessage += attendeesThatHaveLeft.join(', ');
+          notifyOfChangesToMembership(displayMessage);
+        }
+  currentAttendees = updatedAttendees;
+  const /** HTMLElement */ sessionInfoAttendeesDiv =
+      document.getElementById('session-info-attendees');
+  sessionInfoAttendeesDiv.innerHTML = '';
+  currentAttendees.forEach(attendee => {
+    buildAttendeeDiv(attendee.getScreenName(), controller);
+  });
 }
 
 /**
