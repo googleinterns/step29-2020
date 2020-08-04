@@ -1,4 +1,5 @@
 import { ServerClient } from './serverclient.js';
+import { NoVNCClient } from './novncclient.js';
 
 /**
  * Represents the URLSearchParams the client is in, 
@@ -239,6 +240,57 @@ function changeControllerTo(event, controller) {
       window.alert('No contact with the server!');
     }
   }
+}
+
+/**
+ * function updateController() checks to see if the current user should
+ * be the controller of their party, changing session screen privilege
+ * and updating user interface.
+ * @param {string} controller
+ */
+function updateController(controller) {
+  const /** HTMLElement */ sessionInfoAttendeesDiv =
+      document.getElementById('session-info-attendees');
+  const /** NodeListOf<HTMLSpanElement> */ controllerToggleList = 
+      sessionInfoAttendeesDiv.querySelectorAll('span');
+  if (urlParameters.get('name') === controller) {
+    novncClient.setViewOnly(false);
+  }
+  controllerToggleList.forEach(individualSpanElement => {
+    individualSpanElement.style.backgroundColor = '#fff';
+  });
+  sessionInfoAttendeesDiv.querySelector(`#${controller}`)
+          .parentElement.querySelector('span').style.
+              backgroundColor = '#fd5d00';
+}
+
+/**
+ * function connectCallback() is called on once the novncClient connects.
+ */
+function connectCallback() {
+  document.getElementById('session-status').style.display = 'none';
+  isConnected = true;
+}
+
+/**
+ * function disconnectCallback() is called on once the novncClient
+ * disconnects.
+ */
+function disconnectCallback() {
+  document.getElementById('session-status').style.display = 'block';
+  isConnected = false;
+  let /** number */ setIntervalId = setInterval(() => {
+    if(!isConnected) {
+      client.getSession().then(session => {
+        novncClient.remoteToSession(
+            session.getIpOfVM(), session.getSessionId());
+      }).catch(error => {
+        window.alert(error);
+      });
+    } else {
+      clearInterval(setIntervalId);
+    }
+  }, SESSION_REFRESH_CADENCE_MS);
 }
 
 /**
