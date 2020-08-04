@@ -41,6 +41,11 @@ function main() {
   urlParameters = new URLSearchParams(window.location.search);
   serverClient = new ServerClient(urlParameters);
   addOnClickListenerToElements();
+  serverClient.getSession().then(session => {
+    setReadOnlyInputs(session.getSessionId());
+  }).catch(error => {
+    window.alert('No contact with the server!');
+  });
 }
 
 /**
@@ -60,6 +65,24 @@ function addOnClickListenerToElements() {
       copyTextToClipboard(event.target);
     });
   });
+}
+
+/**
+ * function setReadOnlyInputs() changes the two inputs,
+ * one on the welcome message and the other in the session 
+ * information div, to show the session ID and then changes them
+ * to read only (meaning they cannot be changed once set).
+ * @param {string} sessionId
+ */
+function setReadOnlyInputs(sessionId) {
+  const /** HTMLElement */ sessionInfoInput = 
+      document.getElementById('session-info-input');
+  sessionInfoInput.value = sessionId;
+  sessionInfoInput.readOnly = true;
+  const /** HTMLElement */ welcomeMessageInput = 
+      document.getElementById('welcome-message-input');
+  welcomeMessageInput.value = sessionId;
+  welcomeMessageInput.readOnly = true;
 }
 
 /**
@@ -107,6 +130,7 @@ function changeControllerTo(event, controller) {
     }
   }
 }
+
 /**
  * function openSessionInfo() displays the div container
  * that has information about the session.
@@ -135,4 +159,5 @@ function copyTextToClipboard(element) {
 }
 
 export { openSessionInfo, closeParentDisplay, copyTextToClipboard, 
-  addOnClickListenerToElements, buildAttendeeDiv, changeControllerTo };
+  addOnClickListenerToElements, setReadOnlyInputs, buildAttendeeDiv,
+  changeControllerTo };

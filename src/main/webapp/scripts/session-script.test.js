@@ -1,19 +1,27 @@
 import * as sessionscript from './session-script';
 import { ServerClient } from './serverclient';
+import { Session } from './session';
 import fetch from 'jest-fetch-mock';
 
-fetch.enableMocks();
-
+const getSessionSpy = 
+    jest.spyOn(ServerClient.prototype, 'getSession').
+        mockResolvedValue(new Session(
+            'leee3414123', '1234', [], 'Bryan'));
+const getSessionIdSpy = 
+    jest.spyOn(Session.prototype, 'getSessionId').
+        mockReturnValue('leee3414123');
 const changeControllerToSpy = 
     jest.spyOn(ServerClient.prototype, 'changeControllerTo');
 const urlParamSpy = 
     jest.spyOn(window.URLSearchParams.prototype, 'get').
         mockReturnValue('Jessica');
 
+fetch.enableMocks();
+
 afterEach(() => {
   jest.clearAllMocks();
   fetch.resetMocks();
-})
+});
 
 test('display none to block', () => {
   document.body.innerHTML = '<div id="container"></div>';
@@ -75,6 +83,21 @@ test('tests copy and paste', () => {
   document.execCommand = jest.fn();
   input.click();
   expect(document.execCommand).toHaveBeenCalledWith('copy');
+});
+
+test('tests setReadOnlyInputs()', () => {
+  document.body.innerHTML = '';
+  const sessionInfoInput = document.createElement('input');
+  sessionInfoInput.id = 'session-info-input';
+  const welcomeMessageInput = document.createElement('input');
+  welcomeMessageInput.id = 'welcome-message-input';
+  document.body.appendChild(sessionInfoInput);
+  document.body.appendChild(welcomeMessageInput);
+  sessionscript.setReadOnlyInputs('leee3414123');
+  expect(sessionInfoInput.readOnly).toBe(true);
+  expect(welcomeMessageInput.readOnly).toBe(true);
+  expect(sessionInfoInput.value).toEqual('leee3414123');
+  expect(welcomeMessageInput.value).toEqual('leee3414123');
 });
 
 test('addOnClickTo', () => {
