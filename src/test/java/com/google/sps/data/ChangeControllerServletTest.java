@@ -15,19 +15,17 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
 public class ChangeControllerServletTest {
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
   private final DatastoreClientInterface datastoreClient = new DatastoreClient();
-  
+  private final ChangeControllerServlet servlet = new ChangeControllerServlet();
+
   @Mock
   HttpServletRequest request;
   @Mock
   HttpServletResponse response;
-  @Spy
-  ChangeControllerServlet servlet = new ChangeControllerServlet();
 
   @Before
   public void setUp() throws Exception {
@@ -41,7 +39,7 @@ public class ChangeControllerServletTest {
   }
 
   @Test
-  public void testDoPost() throws IOException, ServletException {
+  public void testDoPostOkResponse() throws IOException, ServletException {
     Mockito.when(request.getParameter("session-id")).thenReturn("EEEEE7");
     Mockito.when(request.getParameter("name")).thenReturn("Jessica");
     SessionInterface oldSession =
@@ -52,5 +50,13 @@ public class ChangeControllerServletTest {
     servlet.doPost(request, response);
     Assert.assertEquals(updatedExpectedSession, datastoreClient.getSession("EEEEE7").get());
     Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
+  }
+
+  @Test
+  public void testDoPostBadRequest() throws IOException, ServletException {
+    Mockito.when(request.getParameter("session-id")).thenReturn("EEEE7");
+    Mockito.when(request.getParameter("name")).thenReturn("Jessica");
+    servlet.doPost(request, response);
+    Mockito.verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
   }
 }

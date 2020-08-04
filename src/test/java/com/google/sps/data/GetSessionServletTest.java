@@ -21,7 +21,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -31,15 +30,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class GetSessionServletTest {
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
-  private final DatastoreClientInterface datastoreClient = 
-      new DatastoreClient();
+  private final DatastoreClientInterface datastoreClient = new DatastoreClient();
+  private final GetSessionServlet servlet = new GetSessionServlet();
 
   @Mock
   HttpServletRequest request;
   @Mock
   HttpServletResponse response;
-  @Spy
-  GetSessionServlet servlet = new GetSessionServlet();
 
   @Before
   public void setUp() throws Exception {
@@ -54,8 +51,7 @@ public class GetSessionServletTest {
     helper.tearDown();
   }
 
-  @Test
-  public void testDoGet() throws Exception {
+  public void testDoGetOkResponse() throws Exception {
     SessionInterface expectedSession =
         new Session("EEEEE7", Optional.of("Jessica"), Optional.of("12.34.56.78"));
     AttendeeInterface expectedAttendee =
@@ -76,5 +72,14 @@ public class GetSessionServletTest {
     servlet.doGet(request, response);
     String actualJson = sw.getBuffer().toString().trim();
     Assert.assertEquals(expectedJson, actualJson);
+    Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
+  }
+
+  @Test
+  public void testDoGetBadRequest() throws Exception {
+    Mockito.when(request.getParameter("session-id")).thenReturn("EEEE7");
+    Mockito.when(request.getParameter("name")).thenReturn("Jessica");
+    servlet.doGet(request, response);
+    Mockito.verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
   }
 }

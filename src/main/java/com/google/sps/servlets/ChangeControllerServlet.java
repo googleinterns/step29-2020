@@ -2,7 +2,6 @@ package com.google.sps.servlets;
 
 import com.google.sps.data.DatastoreClient;
 import com.google.sps.data.DatastoreClientInterface;
-import com.google.sps.data.Session;
 import com.google.sps.data.SessionInterface;
 import java.io.IOException;
 import java.net.URLDecoder;
