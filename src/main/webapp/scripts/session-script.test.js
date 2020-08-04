@@ -160,6 +160,33 @@ test('tests changeControllerTo() - controller does not click', () => {
   expect(changeControllerToSpy).toBeCalledTimes(0);
 });
 
+test('Tests to see if controller updates correctly UI wise', () => {
+  document.body.innerHTML = '';
+  const sessionInfoAttendeeDiv =
+      document.createElement('div');
+  sessionInfoAttendeeDiv.id = 'session-info-attendees';
+  document.body.appendChild(sessionInfoAttendeeDiv);
+  sessionscript.buildAttendeeDiv('Jessica', 'Jessica');
+  sessionscript.buildAttendeeDiv('Bryan', 'Jessica');
+  sessionscript.buildAttendeeDiv('Chris', 'Jessica');
+  const urlParamSpy = 
+      jest.spyOn(window.URLSearchParams.prototype, 'get').
+          mockReturnValue('Jessica');
+  const sessionSpy = 
+      jest.spyOn(Session.prototype, 'getScreenNameOfController').
+          mockReturnValue('Jessica');
+  sessionscript.updateController('Jessica');
+  expect(sessionInfoAttendeeDiv.querySelector(`#${'Jessica'}`)
+      .parentElement.querySelector('span').style.
+          backgroundColor).toEqual('rgb(253, 93, 0)');
+  expect(sessionInfoAttendeeDiv.querySelector(`#${'Bryan'}`)
+      .parentElement.querySelector('span').style.
+          backgroundColor).toEqual('rgb(255, 255, 255)');
+  expect(sessionInfoAttendeeDiv.querySelector(`#${'Chris'}`)
+      .parentElement.querySelector('span').style.
+          backgroundColor).toEqual('rgb(255, 255, 255)');
+});
+
 /**
  * Builds a mini-webpage to be used to test addOnClickListenerToElements.
  * Adds elements with specific ids/class names that the session-script 
