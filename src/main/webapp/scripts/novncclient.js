@@ -1,7 +1,4 @@
-//import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
-// import RFB from 'rfb.js';
-
-import RFB from 'rfb.js';
+import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
 
 /**
  * The NoVNCClient class essentially surrounds the RFB object of the noVNC

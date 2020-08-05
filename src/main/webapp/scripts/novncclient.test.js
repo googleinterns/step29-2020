@@ -1,48 +1,51 @@
-// import { NoVNCClient } from './novncclient.js';
-
-const rfbScript = document.createElement('script');
-rfbScript.setAttribute('type', 'text/javascript');
-rfbScript.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.2.0/core/rfb.js');
-
 import { NoVNCClient } from './novncclient.js';
 
-//import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.2.0/core/rfb.js';
-
-
-// jest.mock('https://cdn.jsdelivr.net/npm/@novnc/novnc@1.2.0/core/rfb.js', 
-//   () => {
-//     const mockRFB = {
-//       viewOnly: null,
-//       disconnect: jest.fn().mockImplementation(() => { return true; })
-//     };
-//     return jest.fn(() => mockRFB);
-// });
-
-test.only('We can check if remoteToSession throws an error', () => {
+test('We can check if remoteToSession works correctly', () => {
+    const div = document.createElement('div');
     const novncClient = 
-        new NoVNCClient(testConnectCallback, testDisconnectCallback);
+        new NoVNCClient(testConnectCallback, testDisconnectCallback, div);
     novncClient.remoteToSession('123456.12', 'EEEEE7');
-    console.log(novncClient.rfbConnection_);
+    expect(novncClient.rfbConnection_.target).toEqual(div);
+    expect(novncClient.rfbConnection_.viewOnly).toBe(true);
 });
 
-test('We can check if setViewOnly throws an error', () => {
-  try {
-    const novncClient = 
-        new NoVNCClient(testConnectCallback, testDisconnectCallback);
-    novncClient.setViewOnly(true);
-  } catch (e) {
-    expect(e.message).toBe('Unimplemented');
-  }
+test('We can check if disconnect works - no object', () => {
+  const disconnectSpy = jest.spyOn(RFB.prototype, 'disconnect');
+  const div = document.createElement('div');
+  const novncClient = 
+      new NoVNCClient(testConnectCallback, testDisconnectCallback, div);
+  novncClient.disconnect();
+  expect(disconnectSpy).toHaveBeenCalledTimes(0);
 });
 
-test('We can check if disconnect throws an error', () => {
-  try {
-    const novncClient = 
-        new NoVNCClient(testConnectCallback, testDisconnectCallback);
-    novncClient.disconnect();
-  } catch (e) {
-    expect(e.message).toBe('Unimplemented');
-  }
+test('We can check if disconnect works - with object', () => {
+  const disconnectSpy = jest.spyOn(RFB.prototype, 'disconnect');
+  const div = document.createElement('div');
+  const novncClient = 
+      new NoVNCClient(testConnectCallback, testDisconnectCallback, div);
+  novncClient.remoteToSession('123456.12', 'EEEEE7');
+  novncClient.disconnect();
+  expect(disconnectSpy).toHaveBeenCalledTimes(1);
+});
+
+test('We can check if setViewOnly works - no object', () => {
+  const viewOnlySpy = jest.spyOn(RFB.prototype, 'viewOnly', 'set');
+  const div = document.createElement('div');
+  const novncClient = 
+      new NoVNCClient(testConnectCallback, testDisconnectCallback, div);
+  novncClient.setViewOnly(false);
+  expect(viewOnlySpy).toHaveBeenCalledTimes(0);
+});
+
+test('We can check if setViewOnly works - with object', () => {
+  const viewOnlySpy = jest.spyOn(RFB.prototype, 'viewOnly', 'set');
+  const div = document.createElement('div');
+  const novncClient = 
+      new NoVNCClient(testConnectCallback, testDisconnectCallback, div);
+  novncClient.remoteToSession('123456.12', 'EEEEE7');
+  novncClient.setViewOnly(false);
+  expect(viewOnlySpy).toHaveBeenCalledWith(false);
+  expect(novncClient.rfbConnection_.viewOnly).toBe(false);
 });
 
 function testConnectCallback() {
