@@ -2,6 +2,7 @@ import * as sessionscript from './session-script';
 import { ServerClient } from './serverclient';
 import { Session } from './session';
 import fetch from 'jest-fetch-mock';
+import { Attendee } from './attendee';
 
 const getSessionSpy = 
     jest.spyOn(ServerClient.prototype, 'getSession').
@@ -15,6 +16,11 @@ const changeControllerToSpy =
 const urlParamSpy = 
     jest.spyOn(window.URLSearchParams.prototype, 'get').
         mockReturnValue('Jessica');
+const buildAttendeeDivSpy =
+    jest.spyOn(sessionscript.sessionScriptSpies, 'buildAttendeeDiv');
+const notifyOfChangesToMembershipSpy =
+    jest.spyOn(sessionscript.sessionScriptSpies,
+        'notifyOfChangesToMembership');
 
 fetch.enableMocks();
 
@@ -171,10 +177,7 @@ test('Tests to see if controller updates correctly UI wise', () => {
   sessionscript.buildAttendeeDiv('Chris', 'Jessica');
   const urlParamSpy = 
       jest.spyOn(window.URLSearchParams.prototype, 'get').
-          mockReturnValue('Jessica');
-  const sessionSpy = 
-      jest.spyOn(Session.prototype, 'getScreenNameOfController').
-          mockReturnValue('Jessica');
+          mockReturnValue('Bryan');
   sessionscript.updateController('Jessica');
   expect(sessionInfoAttendeeDiv.querySelector(`#${'Jessica'}`)
       .parentElement.querySelector('span').style.
@@ -185,6 +188,119 @@ test('Tests to see if controller updates correctly UI wise', () => {
   expect(sessionInfoAttendeeDiv.querySelector(`#${'Chris'}`)
       .parentElement.querySelector('span').style.
           backgroundColor).toEqual('rgb(255, 255, 255)');
+});
+
+test.skip(`makes sure notifyOfChangesToMembership is
+correctly displaying message`, (done) => {
+    const displayMessage = 'How are you ';
+    document.body.innerHTML = '';
+    const alertMembershipDiv =
+        document.createElement('div');
+    alertMembershipDiv.id = 'alert-membership';
+    document.body.appendChild(alertMembershipDiv);
+    sessionscript.notifyOfChangesToMembership(displayMessage);
+    setTimeout(() => {
+      expect(alertMembershipDiv.textContent).toEqual('How are you.');
+      expect(alertMembershipDiv.className).toEqual('display-message');
+      done();
+    }, 2000);
+    setTimeout(() => {
+      expect(alertMembershipDiv.className).toEqual('');
+      done();
+    }, 6000);
+});
+
+test(`A new member 
+    -updateSessionAttendees`, () => {
+      const expectedMessage =
+          `The following people have joined the session: ${'Miguel'}`;
+      document.body.innerHTML = '';
+      const sessionInfoAttendeeDiv =
+          document.createElement('div');
+      sessionInfoAttendeeDiv.id = 'session-info-attendees';
+      document.body.appendChild(sessionInfoAttendeeDiv);
+      const alertMembershipDiv =
+          document.createElement('div');
+      alertMembershipDiv.id = 'alert-membership';
+      document.body.appendChild(alertMembershipDiv);
+      sessionscript.updateSessionAttendees(['Jessica', 'Bryan', 
+          'Miguel'], 'Jessica');
+      expect(notifyOfChangesToMembershipSpy).
+          toHaveBeenCalledWith(expectedMessage);
+      expect(buildAttendeeDivSpy).toBeCalledTimes(3);
+      expect(buildAttendeeDivSpy).toHaveBeenCalledWith('Jessica', 'Jessica');
+      expect(buildAttendeeDivSpy).toHaveBeenCalledWith('Bryan', 'Jessica');
+      expect(buildAttendeeDivSpy).toHaveBeenCalledWith('Miguel', 'Jessica');
+});
+
+test(`A member that has left
+    -updateSessionAttendees`, () => {
+      const expectedMessage =
+          `The following people have left the session: ${'Bryan'}`;
+      document.body.innerHTML = '';
+      const sessionInfoAttendeeDiv =
+          document.createElement('div');
+      sessionInfoAttendeeDiv.id = 'session-info-attendees';
+      document.body.appendChild(sessionInfoAttendeeDiv);
+      const alertMembershipDiv =
+          document.createElement('div');
+      alertMembershipDiv.id = 'alert-membership';
+      document.body.appendChild(alertMembershipDiv);
+      sessionscript.updateSessionAttendees(['Jessica'], 'Bryan');
+      expect(notifyOfChangesToMembershipSpy).
+         toHaveBeenCalledWith(expectedMessage);
+      expect(buildAttendeeDivSpy).toBeCalledTimes(1);
+      expect(buildAttendeeDivSpy).toHaveBeenCalledWith('Jessica', 'Bryan');
+    });
+
+test(`A new member + a lost member' + 
+    '-updateSessionAttendees`, () => {
+      const expectedMessage =
+          'The following people have joined the session: ' + 'Miguel.' + 
+              ' The following people have left the session: ' + 'Bryan';
+      document.body.innerHTML = '';
+      const sessionInfoAttendeeDiv =
+          document.createElement('div');
+      sessionInfoAttendeeDiv.id = 'session-info-attendees';
+      document.body.appendChild(sessionInfoAttendeeDiv);
+      const alertMembershipDiv =
+          document.createElement('div');
+      alertMembershipDiv.id = 'alert-membership';
+      document.body.appendChild(alertMembershipDiv);
+      sessionscript.updateSessionAttendees(['Jessica', 'Miguel'], 'Jessica');
+      expect(notifyOfChangesToMembershipSpy).
+          toHaveBeenCalledWith(expectedMessage);
+      expect(buildAttendeeDivSpy).toBeCalledTimes(2);
+      expect(buildAttendeeDivSpy).toBeCalledWith('Jessica', 'Jessica');
+      expect(buildAttendeeDivSpy).toBeCalledWith('Miguel', 'Jessica');
+});
+
+test(`no update 
+    '-updateSessionAttendees`, () => {
+      document.body.innerHTML = '';
+      const sessionInfoAttendeeDiv =
+          document.createElement('div');
+      sessionInfoAttendeeDiv.id = 'session-info-attendees';
+      document.body.appendChild(sessionInfoAttendeeDiv);
+      sessionscript.updateSessionAttendees(['Jessica', 'Bryan'], 'Bryan');
+      expect(buildAttendeeDivSpy).toBeCalledWith('Jessica', 'Bryan');
+      expect(buildAttendeeDivSpy).toBeCalledWith('Bryan', 'Bryan');
+});
+
+test('We can check if correct errors are thrown - connectCallback', () => {
+      try {
+        sessionscript.connectCallback();
+      } catch (e) {
+        expect(e.message).toBe('Unimplemented');
+      }
+});
+
+test('We can check if correct errors are thrown - disconnectCallback', () => {
+      try {
+        sessionscript.disconnectCallback();
+      } catch (e) {
+        expect(e.message).toBe('Unimplemented');
+      }
 });
 
 /**

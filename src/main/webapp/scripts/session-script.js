@@ -127,7 +127,11 @@ function setReadOnlyInputs(sessionId) {
 function updateUI() {
   setInterval(() => {
     client.getSession().then(session => {
-      updateSessionAttendees(session.getListOfAttendees(),
+      const /** Array */ listOfAttendeesNames = [];
+      session.getListOfAttendees().forEach(attendee => {
+        listOfAttendeesNames.push(attendee.getScreenName());
+      });
+      updateSessionAttendees(listOfAttendeesNames,
           session.getScreenNameOfController());
       updateController(session.getScreenNameOfController());
     });
@@ -170,7 +174,7 @@ function updateSessionAttendees(updatedAttendees, controller) {
       document.getElementById('session-info-attendees');
   sessionInfoAttendeesDiv.innerHTML = '';
   currentAttendees.forEach(attendee => {
-    buildAttendeeDiv(attendee.getScreenName(), controller);
+    buildAttendeeDiv(attendee, controller);
   });
 }
 
@@ -301,4 +305,5 @@ function copyTextToClipboard(element) {
 
 export { openSessionInfo, closeParentDisplay, copyTextToClipboard, 
   addOnClickListenerToElements, buildAttendeeDiv, changeControllerTo,
-  updateController, notifyOfChangesToMembership, updateSessionAttendees };
+  updateController, notifyOfChangesToMembership, updateSessionAttendees, 
+  setReadOnlyInputs, connectCallback, disconnectCallback };
