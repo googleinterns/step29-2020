@@ -27,12 +27,17 @@ public class GetSessionServlet extends HttpServlet {
     String sessionId = 
         URLDecoder.decode(request.getParameter("session-id"), StandardCharsets.UTF_8);
     String name = URLDecoder.decode(request.getParameter("name"), StandardCharsets.UTF_8);
-    AttendeeInterface updatedAttendee = new Attendee(sessionId, name, new Date());
-    datastoreClient.insertOrUpdateAttendee(updatedAttendee);
-    Optional<SessionInterface> optionalSession = datastoreClient.getSession(sessionId);
-    if (!optionalSession.isPresent()) {
+    Optional<SessionInterface> optionalSession; 
+    try {
+      optionalSession = datastoreClient.getSession(sessionId);
+    } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
+    }
+    AttendeeInterface updatedAttendee = new Attendee(sessionId, name, new Date());
+    datastoreClient.insertOrUpdateAttendee(updatedAttendee);
+    if (!optionalSession.isPresent()) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } else {
       List<AttendeeInterface> listOfAttendees = datastoreClient.getAttendeesInSession(sessionId);
       Gson gson = new Gson();

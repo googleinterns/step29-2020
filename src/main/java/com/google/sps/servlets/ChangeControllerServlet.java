@@ -22,10 +22,15 @@ public class ChangeControllerServlet extends HttpServlet {
     String sessionId =
         URLDecoder.decode(request.getParameter("session-id"), StandardCharsets.UTF_8);
     String name = URLDecoder.decode(request.getParameter("name"), StandardCharsets.UTF_8);
-    Optional<SessionInterface> optionalSession = datastoreClient.getSession(sessionId);
-    if (!optionalSession.isPresent()) {
+    Optional<SessionInterface> optionalSession;
+    try {
+      optionalSession = datastoreClient.getSession(sessionId);
+    } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
+    }
+    if (!optionalSession.isPresent()) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } else {
       SessionInterface session = optionalSession.get();
       session.setScreenNameOfController(name);
