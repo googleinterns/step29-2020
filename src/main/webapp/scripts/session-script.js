@@ -44,14 +44,7 @@ const URL_PARAM_KEY = {
 let currentAttendees = [];
 
 /**
- * Represents the current state of the novncClient in terms of whether or
- * not it is connected.
- * @type {boolean}
- */
-let isConnected = false;
-
-/**
- * Represents (in miliseconds) the cadence at which the session is
+ * Represents (in miliseconds) the cadence at which the Session is
  * refreshed. 
  * @type {number}
  */
@@ -253,7 +246,7 @@ function updateController(controller) {
       document.getElementById('session-info-attendees');
   const /** NodeListOf<HTMLSpanElement> */ controllerToggleList = 
       sessionInfoAttendeesDiv.querySelectorAll('span');
-  if (urlParameters.get('name') === controller) {
+  if (urlParameters.get(URL_PARAM_KEY.SCREEN_NAME) === controller) {
     novncClient.setViewOnly(false);
   }
   controllerToggleList.forEach(individualSpanElement => {
@@ -268,8 +261,7 @@ function updateController(controller) {
  * function connectCallback() is called on once the novncClient connects.
  */
 function connectCallback() {
-  document.getElementById('session-status').style.display = 'none';
-  isConnected = true;
+  throw new Error('Unimplemented');
 }
 
 /**
@@ -277,20 +269,7 @@ function connectCallback() {
  * disconnects.
  */
 function disconnectCallback() {
-  document.getElementById('session-status').style.display = 'block';
-  isConnected = false;
-  let /** number */ setIntervalId = setInterval(() => {
-    if(!isConnected) {
-      client.getSession().then(session => {
-        novncClient.remoteToSession(
-            session.getIpOfVM(), session.getSessionId());
-      }).catch(error => {
-        window.alert(error);
-      });
-    } else {
-      clearInterval(setIntervalId);
-    }
-  }, SESSION_REFRESH_CADENCE_MS);
+  throw new Error('Unimplemented');
 }
 
 /**
