@@ -16,7 +16,7 @@ test('Check for correct value of sessionId', () => {
     expect(name).toBe(screenNameOfController);
 }); 
 
-test('Check for correct value of fromObject', () => {
+test.only('Check for correct value of fromObject', () => {
     const object = JSON.parse(
       '{"sessionId":"EEEEE7","screenNameOfController":{"value":"Jessica"}'+
       ',"ipOfVM":{"value":"12.34.56.78"},"listOfAttendees":[{"sessionId":'+

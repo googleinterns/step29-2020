@@ -9,7 +9,7 @@ class Session {
         /** @private {string} */
         this.ipOfVM_ = ipOfVM;
 
-        /** @private {string} */
+        /** @private {Array} */
         this.listOfAttendees_ = listOfAttendees;
 
         /** @private  {string} */
@@ -40,11 +40,10 @@ class Session {
         const session = new Session();
         session.sessionId_ = obj.sessionId;
         session.ipOfVM_ = obj.ipOfVM.value;
-        const /** Array */ listOfAttendees = [];
+        session.listOfAttendees_ = [];
         obj.listOfAttendees.forEach(attendee => {
-          listOfAttendees.push(Attendee.fromObject(attendee));
-        })
-        session.listOfAttendees_ = listOfAttendees;
+          session.listOfAttendees_.push(Attendee.fromObject(attendee));
+        });
         session.screenNameOfController_ = obj.screenNameOfController.value;
         return session;
     }
