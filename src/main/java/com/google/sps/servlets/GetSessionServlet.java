@@ -34,9 +34,10 @@ public class GetSessionServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
-    // Updates the time of the current attendee accessing the GetSessionServlet
-    // for the BackgroundTaskManager.
-    AttendeeInterface updatedAttendee = new Attendee(sessionId, name, new Date());
+    // Updates the time last polled of the current attendee requesting the GetSessionServlet.
+    AttendeeInterface updatedAttendee = 
+        new Attendee(/**sessionId=*/sessionId, 
+            /**screenName=*/name, /**timeLastPolled=*/new Date());
     datastoreClient.insertOrUpdateAttendee(updatedAttendee);
     if (!optionalSession.isPresent()) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
