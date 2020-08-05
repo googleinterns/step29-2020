@@ -127,7 +127,7 @@ function setReadOnlyInputs(sessionId) {
 function updateUI() {
   setInterval(() => {
     client.getSession().then(session => {
-      updateSessionInfoAttendees(session.getListOfAttendees(),
+      updateSessionAttendees(session.getListOfAttendees(),
           session.getScreenNameOfController());
       updateController(session.getScreenNameOfController());
     });
@@ -135,13 +135,13 @@ function updateUI() {
 }
 
 /**
- * function updateSessionInfoAttendees() adds new attendees to the
+ * function updateSessionAttendees() adds new attendees to the
  * session to the session info attendee div. Also removes attendees 
  * if they left the session. Alerts users of anyone who has left/entered.
  * @param {Array} updatedAttendees array of new attendees
  * @param {string} controller name of the controller of the session
  */
-function updateSessionInfoAttendees(updatedAttendees, controller) {
+function updateSessionAttendees(updatedAttendees, controller) {
   const /** Array */ newAttendees = updatedAttendees.filter(attendee => {
     return !currentAttendees.includes(attendee);
   });
@@ -300,5 +300,5 @@ function copyTextToClipboard(element) {
 }
 
 export { openSessionInfo, closeParentDisplay, copyTextToClipboard, 
-  addOnClickListenerToElements, setReadOnlyInputs, buildAttendeeDiv,
-  changeControllerTo };
+  addOnClickListenerToElements, buildAttendeeDiv, changeControllerTo,
+  updateController, notifyOfChangesToMembership, updateSessionAttendees };
