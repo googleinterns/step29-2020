@@ -76,6 +76,7 @@ function main() {
   addOnClickListenerToElements();
   serverClient.getSession().then(session => {
     setReadOnlyInputs(session.getSessionId());
+    document.getElementById('welcome-message').style.display = 'block';
     updateUI();
   }).catch(error => {
     window.alert('No contact with the server!');
