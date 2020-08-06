@@ -80,7 +80,7 @@ public class JoinSessionServletTest {
     Mockito.verify(response).setStatus(HttpServletResponse.SC_FORBIDDEN);
   }
 
-   @Test
+  @Test
   public void testDoPostResponse() throws Exception {
     AttendeeInterface attendee1 = new Attendee("12345", "Taniece", new Date());
     datastoreClient.insertOrUpdateAttendee(attendee1);
