@@ -22,34 +22,40 @@ import com.google.sps.data.DatastoreClient;
 import com.google.sps.data.AttendeeInterface;
 import com.google.sps.data.Attendee;
 
-/** Servlet that returns a list of attendees in a session.  */
-@WebServlet("/join")
+/** 
+ * Servlet that stores users data in datastore and redirected them to the 
+ * session webpage.  
+ */
+@WebServlet("/join-session")
 public class JoinSessionServlet extends HttpServlet {
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException {
-      DatastoreClientInterface datastoreClient = new DatastoreClient();
-      String sessionId = request.getParameter("sessionId");
-      List<AttendeeInterface> attendeeList = 
-        datastoreClient.getAttendeesInSession(sessionId);
-      Gson gson = new Gson();
-      String json = gson.toJson(attendeeList);
-      response.setContentType("application/json;");
-      response.getWriter().println(json);
-      response.setStatus(HttpServletResponse.SC_OK);
-
-    }
-
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws IOException {
       DatastoreClientInterface datastoreClient = new DatastoreClient();
-      String screenName = request.getParameter("screenName");
-      String sessionId = request.getParameter("sessionId");
-      Date date = new Date();
-      AttendeeInterface attendee = new Attendee(screenName, sessionId, date);
-      datastoreClient.insertOrUpdateAttendee(attendee);
-      response.sendRedirect("/session.html?session-id=" + sessionId + 
-        "&name=" + screenName);
+      String screenName = request.getParameter("name");
+      String sessionId = request.getParameter("session-id");
+      Date timeLastPolled = new Date();
+      List<AttendeeInterface> attendeeList = 
+        datastoreClient.getAttendeesInSession(sessionId);
+      if (attendeeList.isEmpty()) {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        return;
+      }
+      else {
+        for (int i = 0; i<attendeeList.size(); i++) {
+          if (attendeeList.get(i).getScreenName().equals(screenName)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+          }
+        }
+        AttendeeInterface attendee = 
+          new Attendee(sessionId, screenName, timeLastPolled);
+        datastoreClient.insertOrUpdateAttendee(attendee);
+        List<AttendeeInterface> List2 = 
+          datastoreClient.getAttendeesInSession(sessionId);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.sendRedirect("/session.html?session-id=" + sessionId + 
+          "&name=" + screenName); 
+      }
     }
-}
+}       

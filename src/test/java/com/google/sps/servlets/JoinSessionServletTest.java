@@ -13,8 +13,6 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.sps.servlets.JoinSessionServlet;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Query;
 import org.junit.After;
 import org.junit.Assert;
@@ -36,8 +34,6 @@ public class JoinSessionServletTest {
   private final DatastoreClientInterface datastoreClient = 
       new DatastoreClient();
   private final JoinSessionServlet servlet = new JoinSessionServlet();
-  private final DatastoreService DatastoreService = 
-      DatastoreServiceFactory.getDatastoreService();
 
   @Mock
   HttpServletRequest request;
@@ -58,30 +54,47 @@ public class JoinSessionServletTest {
   }
 
   @Test
-  public void testDoGetReturnsAttendeeList() throws Exception {
-    Mockito.when(request.getParameter("sessionId")).thenReturn("12345");
-    List<AttendeeInterface> listOfAttendees = 
+  public void testInvalidSessionId() throws Exception {
+    Mockito.when(request.getParameter("name")).thenReturn("Taniece");
+    Mockito.when(request.getParameter("session-id")).thenReturn("12345");
+    servlet.doPost(request, response);
+    List<AttendeeInterface> attendeeList = 
         datastoreClient.getAttendeesInSession("12345");
-    Gson gson = new Gson();
-    String expectedJson = gson.toJson(listOfAttendees);
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-    Mockito.when(response.getWriter()).thenReturn(pw);
-    servlet.doGet(request, response);
-    String actualJson = sw.getBuffer().toString().trim();
-    Assert.assertEquals(expectedJson, actualJson);
-    Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
+    Assert.assertEquals(attendeeList.size(), 0);
+    Mockito.verify(response).setStatus(HttpServletResponse.SC_NOT_FOUND);
   }
 
-  @Test
-  public void testDoPostWritesToDatastoreAndRedirects() throws Exception {
-    Mockito.when(request.getParameter("screenName")).thenReturn("Taniece");
-    Mockito.when(request.getParameter("sessionId")).thenReturn("12345");
+  @Test    
+  public void testDoPostScreenNameNotUnique() throws Exception {
+    Mockito.when(request.getParameter("name")).thenReturn("Taniece");
+    Mockito.when(request.getParameter("session-id")).thenReturn("12345");
+    AttendeeInterface attendee1 = new Attendee("12345", "Taniece", new Date());
+    datastoreClient.insertOrUpdateAttendee(attendee1);
+    AttendeeInterface attendee2 = 
+        datastoreClient.getAttendee("Taniece", "12345").get();
+    Assert.assertEquals(attendee1,attendee2);
     servlet.doPost(request, response);
-    Assert.assertEquals(DatastoreService.prepare(new Query
-        (EntityConstants.AttendeeEntity.TABLE_NAME))
-        .countEntities(), 1);
-    Mockito.verify(response).sendRedirect
-        ("/session.html?session-id=12345&name=Taniece");
+    List<AttendeeInterface> attendeeList = 
+        datastoreClient.getAttendeesInSession("12345");
+    Assert.assertEquals(attendeeList.size(), 1);
+    Mockito.verify(response).setStatus(HttpServletResponse.SC_FORBIDDEN);
   }
+
+   @Test
+  public void testDoPostResponse() throws Exception {
+    AttendeeInterface attendee1 = new Attendee("12345", "Taniece", new Date());
+    datastoreClient.insertOrUpdateAttendee(attendee1);
+    List<AttendeeInterface> attendeeList = 
+        datastoreClient.getAttendeesInSession("12345");
+    Assert.assertEquals(attendeeList.size(), 1);
+    Mockito.when(request.getParameter("name")).thenReturn("Chris");
+    Mockito.when(request.getParameter("session-id")).thenReturn("12345");
+    servlet.doPost(request, response);
+    List<AttendeeInterface> attendeeList2 = 
+        datastoreClient.getAttendeesInSession("12345");
+    Assert.assertEquals(attendeeList2.size(), 2);
+    Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
+    Mockito.verify(response).sendRedirect
+        ("/session.html?session-id=12345&name=Chris");
+  } 
 } 
