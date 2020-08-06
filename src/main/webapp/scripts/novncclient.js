@@ -80,7 +80,7 @@ class NoVNCClient {
    */
   setViewOnly(viewOnly) {
     if(this.rfbConnection_) {
-      this.rfbConnection_.viewOnly = viewOnly
+      this.rfbConnection_.viewOnly = viewOnly;
     }
   }
 }
