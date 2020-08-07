@@ -5,12 +5,11 @@ import { Session } from './session.js';
 fetch.enableMocks();
 
 const testParams =  new URLSearchParams('?session-id=EEEE7&name=chris');
-const expectedResult = {
-  sessionId: 'EEEE7',
-  ipOfVM: '1.2.3.4.5.6.7',
-  screenNameOfController: 'chris',
-  listOfAttendees: ['chris', 'bryan']
-};
+const mockFetchResponse = 
+    '{"sessionId":"EEEEE7","screenNameOfController":{"value":"Jessica"}'+
+    ',"ipOfVM":{"value":"12.34.56.78"},"listOfAttendees":[{"sessionId":'+
+    '"EEEEE7","screenName":"Jessica","timeLastPolled":'+
+    '"Aug 3, 2020, 9:38:40 PM"}]}'; 
 
 afterEach(() => {    
   jest.clearAllMocks();
@@ -56,8 +55,8 @@ test('Simulates an aborted response on change-controller-to', () => {
 });
 
 test('Tests get session, makes sure the correct Session object returns', async () => {
-  fetch.mockResponse(JSON.stringify(expectedResult));
+  fetch.mockResponse(mockFetchResponse);
   const client = new ServerClient(testParams);
   await expect(client.getSession()).
-      resolves.toEqual(Session.fromObject(expectedResult)); 
+      resolves.toEqual(Session.fromObject(JSON.parse(mockFetchResponse))); 
 });

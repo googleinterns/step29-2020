@@ -1,3 +1,5 @@
+import { Attendee } from './attendee.js';
+
 /** Attendee Class */
 class Session { 
     constructor(sessionId, ipOfVM, listOfAttendees, screenNameOfController) { 
@@ -7,7 +9,7 @@ class Session {
         /** @private {string} */
         this.ipOfVM_ = ipOfVM;
 
-        /** @private {string} */
+        /** @private {Array} */
         this.listOfAttendees_ = listOfAttendees;
 
         /** @private  {string} */
@@ -16,19 +18,19 @@ class Session {
     } 
 
     getSessionId() {
-        return this.sessionId;
+        return this.sessionId_;
     } 
 
     getIpOfVM() {
-        return this.ipOfVM;
+        return this.ipOfVM_;
     } 
 
     getListOfAttendees() { 
-       return this.listOfAttendees;    
+       return this.listOfAttendees_;    
     }
     
     getScreenNameOfController() {
-       return this.screenNameOfController; 
+       return this.screenNameOfController_; 
     }
     /**
     * @param {Session} obj An Json Object must be passed so that the function 
@@ -37,9 +39,12 @@ class Session {
     static fromObject(obj) {   
         const session = new Session();
         session.sessionId_ = obj.sessionId;
-        session.ipOfVM_ = obj.ipOfVM;
-        session.listOfAttendees_ = obj.listOfAttendees;
-        session.screenNameOfController_ = obj.screenNameOfController;
+        session.ipOfVM_ = obj.ipOfVM.value;
+        session.listOfAttendees_ = [];
+        obj.listOfAttendees.forEach(attendee => {
+          session.listOfAttendees_.push(Attendee.fromObject(attendee));
+        });
+        session.screenNameOfController_ = obj.screenNameOfController.value;
         return session;
     }
     
