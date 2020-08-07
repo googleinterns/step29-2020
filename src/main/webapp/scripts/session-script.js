@@ -129,7 +129,7 @@ function setReadOnlyInputs(sessionId) {
  */
 function updateUI() {
   setInterval(() => {
-    client.getSession().then(session => {
+    serverClient.getSession().then(session => {
       const /** Array */ listOfAttendeeScreenNames = [];
       session.getListOfAttendees().forEach(attendee => {
         listOfAttendeeScreenNames.push(attendee.getScreenName());
