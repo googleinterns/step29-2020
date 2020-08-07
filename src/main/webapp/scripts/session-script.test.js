@@ -190,6 +190,41 @@ test('Tests to see if controller updates correctly UI wise', () => {
           backgroundColor).toEqual('rgb(255, 255, 255)');
 });
 
+test('tests updateSpanColor()', () => {
+  document.body.innerHTML = '';
+  const sessionInfoAttendeeDiv =
+      document.createElement('div');
+  sessionInfoAttendeeDiv.id = 'session-info-attendees';
+  document.body.appendChild(sessionInfoAttendeeDiv);
+  sessionscript.buildAttendeeDiv('Jessica', 'Jessica');
+  sessionscript.buildAttendeeDiv('Bryan', 'Jessica');
+  sessionscript.buildAttendeeDiv('Chris', 'Jessica');
+  sessionscript.updateSpanColor(
+      sessionInfoAttendeesDiv.querySelectorAll('span'));
+  expect(sessionInfoAttendeeDiv.querySelector(`#${'Jessica'}`)
+  .parentElement.querySelector('span').style.
+      backgroundColor).toEqual('rgb(255, 255, 255)');
+  expect(sessionInfoAttendeeDiv.querySelector(`#${'Bryan'}`)
+    .parentElement.querySelector('span').style.
+        backgroundColor).toEqual('rgb(255, 255, 255)');
+  expect(sessionInfoAttendeeDiv.querySelector(`#${'Chris'}`)
+    .parentElement.querySelector('span').style.
+        backgroundColor).toEqual('rgb(255, 255, 255)');
+});
+
+test('tests updateCurrentControllerToggle', () => {
+  document.body.innerHTML = '';
+  const sessionInfoAttendeeDiv =
+      document.createElement('div');
+  sessionInfoAttendeeDiv.id = 'session-info-attendees';
+  document.body.appendChild(sessionInfoAttendeeDiv);
+  sessionscript.buildAttendeeDiv('Jessica', 'Jessica');
+  sessionscript.updateCurrentControllerToggle('Jessica');
+  expect(sessionInfoAttendeeDiv.querySelector(`#${'Jessica'}`)
+  .parentElement.querySelector('span').style.
+      backgroundColor).toEqual('rgb(253, 93, 0)');
+})
+
 test(`makes sure notifyOfChangesToMembership is
 correctly displaying message`, (done) => {
     const displayMessage = 'How are you ';
