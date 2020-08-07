@@ -137,6 +137,8 @@ function updateUI() {
       updateSessionAttendees(listOfAttendeeScreenNames,
           session.getScreenNameOfController());
       updateController(session.getScreenNameOfController());
+    }).catch(error => {
+      window.alert('No contact with the server!');
     });
   }, SESSION_REFRESH_CADENCE_MS);
 }
