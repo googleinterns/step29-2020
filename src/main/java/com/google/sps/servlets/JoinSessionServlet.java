@@ -29,8 +29,8 @@ import com.google.sps.data.Attendee;
  */
 @WebServlet("/join-session")
 public class JoinSessionServlet extends HttpServlet {
-  private final String SCREEN_NAME_PARAM_KEY = "name";
-  private final String SESSION_ID_PARAM_KEY = "session-id";
+  private static final String SCREEN_NAME_PARAM_KEY = "name";
+  private static final String SESSION_ID_PARAM_KEY = "session-id";
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -60,13 +60,13 @@ public class JoinSessionServlet extends HttpServlet {
     
     // Checks if a screenName already exists in a session.
     private boolean alreadyExists
-      (String screenName, List<AttendeeInterface> attendeeList) {
-        boolean found = false;
-        for (int i = 0; i<attendeeList.size(); i++) {
-          if (attendeeList.get(i).getScreenName().equals(screenName)) {
-           found = true;
+        (String screenName, List<AttendeeInterface> attendeeList) {
+          boolean found = false;
+          for (int i = 0; i<attendeeList.size(); i++) {
+            if (attendeeList.get(i).getScreenName().equals(screenName)) {
+              found = true;
+            }
           }
-        }
-        return found;
+          return found;
     }
 }       
