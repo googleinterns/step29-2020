@@ -24,7 +24,7 @@ let serverClient;
  * who can interact with the virtual machines.
  * @type {NoVNCClient}
  */
-let novncClient;
+let noVNCClient;
 
 /**
  * This object represents the two keys that are a part 
@@ -70,12 +70,12 @@ window.onload = function() { main(); }
 function main() {
   urlParameters = new URLSearchParams(window.location.search);
   serverClient = new ServerClient(urlParameters);
-  novncClient = new NoVNCClient(
+  noVNCClient = new NoVNCClient(
       connectCallback, disconnectCallback, 
           document.getElementById('session-screen'));
   addOnClickListenerToElements();
   serverClient.getSession().then(session => {
-    novncClient.remoteToSession(session.getIpOfVM(), 
+    noVNCClient.remoteToSession(session.getIpOfVM(), 
         session.getSessionId());
     setReadOnlyInputs(session.getSessionId());
     document.getElementById('welcome-message').style.display = 'block';
@@ -254,7 +254,7 @@ function updateController(controller) {
   const /** NodeListOf<HTMLSpanElement> */ controllerToggleList = 
       sessionInfoAttendeesDiv.querySelectorAll('span');
   if (urlParameters.get(URL_PARAM_KEY.SCREEN_NAME) === controller) {
-    novncClient.setViewOnly(false);
+    noVNCClient.setViewOnly(false);
   }
   controllerToggleList.forEach(individualSpanElement => {
     individualSpanElement.style.backgroundColor = '#fff';
@@ -265,14 +265,14 @@ function updateController(controller) {
 }
 
 /**
- * function connectCallback() is called on once the novncClient connects.
+ * function connectCallback() is called on once the noVNCClient connects.
  */
 function connectCallback() {
   throw new Error('Unimplemented');
 }
 
 /**
- * function disconnectCallback() is called on once the novncClient
+ * function disconnectCallback() is called on once the noVNCClient
  * disconnects.
  */
 function disconnectCallback() {
