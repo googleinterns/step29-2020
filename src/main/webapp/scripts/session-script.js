@@ -142,13 +142,11 @@ function updateSessionAttendees(updatedAttendees, currentControllerName) {
   if (newAttendees.length > 0) {
     displayMessage +=
         'The following people have joined the session: ';
-    displayMessage += newAttendees.join(', ');
-    displayMessage += '.\n';
+    displayMessage += newAttendees.join(', ') + '.\n';
   }
   if (attendeesThatHaveLeft.length > 0) {
     displayMessage += 'The following people have left the session: ';
-    displayMessage += attendeesThatHaveLeft.join(', ');
-    displayMessage += '.';
+    displayMessage += attendeesThatHaveLeft.join(', ') + '.';
   }
   notifyOfChangesToMembership(displayMessage);
   currentAttendees = updatedAttendees;
@@ -190,8 +188,8 @@ function buildAttendeeDiv(nameOfAttendee, currentControllerName) {
   const /** HTMLSpanElement */ controllerToggle = 
       document.createElement('span');
   controllerToggle.className = 'controller-toggle';
-  controllerToggle.addEventListener('click', event => {
-    changeControllerTo(event, currentControllerName);
+  controllerToggle.addEventListener('click', mouseEvent => {
+    changeControllerTo(mouseEvent, currentControllerName);
   }, /**AddEventListenerOptions=*/false);
   const /** HTMLHeadingElement */ attendeeName =
       document.createElement('h3');
@@ -207,18 +205,19 @@ function buildAttendeeDiv(nameOfAttendee, currentControllerName) {
  * If the current controller of the session clicks on the controller 
  * toggle, their controller status is revoked and the server is updated
  * with information on the new controller.
- * @param {MouseEvent} event the event that captures what was clicked on
+ * @param {MouseEvent} mouseEvent the mouseEvent 
+ *    that captures what was clicked on
  * @param {string} currentControllerName 
  *    name of the controller of the session
  */
-function changeControllerTo(event, currentControllerName) {
+function changeControllerTo(mouseEvent, currentControllerName) {
   if (urlParameters.get(sessionScriptConstants.URL_PARAM_KEY.SCREEN_NAME) 
       === currentControllerName) {
         try {
           serverClient.changeControllerTo(/**newControllerName=*/
-              event.target.parentElement.querySelector('h3').id);
+              mouseEvent.target.parentElement.querySelector('h3').id);
         } catch (e) {
-          window.alert('No contact with the server!');
+          window.alert('No contact with the server, try again later!');
         }
       }
 }

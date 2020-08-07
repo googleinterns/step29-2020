@@ -226,7 +226,7 @@ test('tests updateCurrentControllerToggle', () => {
 })
 
 test(`makes sure notifyOfChangesToMembership is
-correctly displaying message`, (done) => {
+  correctly displaying message`, (done) => {
     const displayMessage = 'How are you ';
     document.body.innerHTML = '';
     const alertMembershipDiv =
@@ -248,7 +248,7 @@ correctly displaying message`, (done) => {
 test(`A new member 
     -updateSessionAttendees`, () => {
       const expectedMessage =
-          `The following people have joined the session: ${'Miguel'}`;
+          'The following people have joined the session: Miguel.\n';
       document.body.innerHTML = '';
       const sessionInfoAttendeeDiv =
           document.createElement('div');
@@ -271,7 +271,7 @@ test(`A new member
 test(`A member that has left
     -updateSessionAttendees`, () => {
       const expectedMessage =
-          `The following people have left the session: ${'Bryan'}`;
+          'The following people have left the session: Bryan.';
       document.body.innerHTML = '';
       const sessionInfoAttendeeDiv =
           document.createElement('div');
@@ -291,8 +291,8 @@ test(`A member that has left
 test(`A new member + a lost member' + 
     '-updateSessionAttendees`, () => {
       const expectedMessage =
-          'The following people have joined the session: ' + 'Miguel.' + 
-              ' The following people have left the session: ' + 'Bryan';
+          'The following people have joined the session: Miguel.' + 
+              '\nThe following people have left the session: Bryan.';
       document.body.innerHTML = '';
       const sessionInfoAttendeeDiv =
           document.createElement('div');
