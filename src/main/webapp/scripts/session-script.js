@@ -313,4 +313,5 @@ function copyTextToClipboard(element) {
 export { openSessionInfo, closeParentDisplay, copyTextToClipboard, 
   addOnClickListenerToElements, buildAttendeeDiv, changeControllerTo,
   updateController, notifyOfChangesToMembership, updateSessionAttendees, 
-  setReadOnlyInputs, connectCallback, disconnectCallback };
+  setReadOnlyInputs, updateSpanColor, updateCurrentControllerToggle,
+  connectCallback, disconnectCallback };
