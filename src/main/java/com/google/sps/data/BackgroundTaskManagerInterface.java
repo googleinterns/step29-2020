@@ -13,15 +13,16 @@ public interface BackgroundTaskManagerInterface {
     */
     public void updateInstances();
     
-    /**
-    * If attendee hasn't been polled, they will be 
-    * removed from the session and the datastore. 
-    */
-    public void deleteInactiveAttendees();
-
     /** 
     * List all sessions and if an instance is not running 
     * for an active session, a replacement will be found or created. 
     */
-    public void replaceFaultyInstances();
+    public void replaceFaultyInstances(); 
+    
+    /**
+    * If attendee hasn't polled, they will be 
+    * removed from the session and the datastore. 
+    */
+    public void deleteInactiveAttendees(DatastoreClientInterface datastore, String sessionId);
+
 }
