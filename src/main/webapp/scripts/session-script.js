@@ -19,7 +19,7 @@ let urlParameters;
 let serverClient;
 
 /**
- * Surrounds the noVNC library, providing many of its functionality in the
+ * Wraps the noVNC library, providing many of its functionality in the
  * context necessary for Virtual Movie Night. Allows for remoting into a
  * session, handles disconnecting and connecting, and allows one to change
  * who can interact with the virtual machines.

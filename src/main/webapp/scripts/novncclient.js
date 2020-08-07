@@ -1,7 +1,7 @@
 import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
 
 /**
- * The NoVNCClient class essentially surrounds the RFB object of the noVNC
+ * The NoVNCClient class essentially wraps the RFB object of the noVNC
  * library, takes care of remoting, what happens if someone connects, 
  * and what happens if someone disconnects. The class also allows for 
  * additional functionality that are specific to the scope of Virtual Movie
