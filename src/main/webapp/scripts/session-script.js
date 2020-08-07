@@ -138,8 +138,9 @@ function updateSessionAttendees(updatedAttendees, currentControllerName) {
       currentAttendees.filter(attendee => {
         return !updatedAttendees.includes(attendee);
   });
+  let /** string */ displayMessage = '';
   if (newAttendees.length > 0) {
-    let /** string */ displayMessage =
+    displayMessage +=
         'The following people have joined the session: ';
     displayMessage += newAttendees.join(', ');
     displayMessage += '.\n';
@@ -147,6 +148,7 @@ function updateSessionAttendees(updatedAttendees, currentControllerName) {
   if (attendeesThatHaveLeft.length > 0) {
     displayMessage += 'The following people have left the session: ';
     displayMessage += attendeesThatHaveLeft.join(', ');
+    displayMessage += '.';
   }
   notifyOfChangesToMembership(displayMessage);
   currentAttendees = updatedAttendees;
@@ -164,7 +166,6 @@ function updateSessionAttendees(updatedAttendees, currentControllerName) {
  * @param {string} displayMessage message to display to users
  */
 function notifyOfChangesToMembership(displayMessage) {
-  displayMessage += '.';
   const alertMembershipDiv = document.getElementById('alert-membership');
   alertMembershipDiv.textContent = displayMessage;
   alertMembershipDiv.className = 'display-message';
