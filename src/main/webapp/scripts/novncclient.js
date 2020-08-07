@@ -1,7 +1,7 @@
 import RFB from 'https://cdn.jsdelivr.net/npm/@novnc/novnc@1.1.0/core/rfb.js';
 
 /**
- * The NoVNCClient class essentially surrounds the RFB object of the noVNC
+ * The NoVNCClient class essentially wraps the RFB object of the noVNC
  * library, takes care of remoting, what happens if someone connects, 
  * and what happens if someone disconnects. The class also allows for 
  * additional functionality that are specific to the scope of Virtual Movie
@@ -53,14 +53,22 @@ class NoVNCClient {
    * @param {string} sessionId represents the id of the current session.
    */
   remoteToSession(ipOfVM, sessionId) {
-    throw new Error('Unimplemented');
+    const /** string */ url = `wss://${ipOfVM}:6080`;
+    this.rfbConnection_ = new RFB(this.rfbConnectionElement_, url,
+        { credentials: { password: sessionId } });
+    this.rfbConnection_.addEventListener('connect', this.connectCallback_);
+    this.rfbConnection_.addEventListener(
+        'disconnect', this.disconnectCallback_);
+    this.rfbConnection_.viewOnly = true;
   }
 
   /**
    * Method disconnect() disconnects from the server.
    */
   disconnect() {
-    throw new Error('Unimplemeted');
+    if(this.rfbConnection_) {
+      this.rfbConnection_.disconnect();
+    }
   }
 
   /**
@@ -71,7 +79,9 @@ class NoVNCClient {
    *    being sent to the server.
    */
   setViewOnly(viewOnly) {
-    throw new Error('Unimplemented');
+    if(this.rfbConnection_) {
+      this.rfbConnection_.viewOnly = viewOnly;
+    }
   }
 }
 

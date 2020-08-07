@@ -16,13 +16,12 @@ test('Check for correct value of sessionId', () => {
     expect(name).toBe(screenNameOfController);
 }); 
 
-test('Check for correct value of fromObject', () => {
-    var obj = { 
-        screenNameOfController:"Jaz",
-        sessionId: "JTK614", 
-        ipOfVM: "122.01.231.25", 
-        listOfAttendees:["Jasmine", "Chris", "Taniece"]
-    };
-    const newSession = Session.fromObject(obj);
-    expect(newSession.getSessionId()).toBe(obj.screenName);
+test.only('Check for correct value of fromObject', () => {
+    const object = JSON.parse(
+      '{"sessionId":"EEEEE7","screenNameOfController":{"value":"Jessica"}'+
+      ',"ipOfVM":{"value":"12.34.56.78"},"listOfAttendees":[{"sessionId":'+
+      '"EEEEE7","screenName":"Jessica","timeLastPolled":'+
+      '"Aug 3, 2020, 9:38:40 PM"}]}'); 
+    const newSession = Session.fromObject(object);
+    expect(newSession.getSessionId()).toBe(object.sessionId);
 });
