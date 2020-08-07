@@ -190,7 +190,7 @@ test('Tests to see if controller updates correctly UI wise', () => {
           backgroundColor).toEqual('rgb(255, 255, 255)');
 });
 
-test.skip(`makes sure notifyOfChangesToMembership is
+test(`makes sure notifyOfChangesToMembership is
 correctly displaying message`, (done) => {
     const displayMessage = 'How are you ';
     document.body.innerHTML = '';

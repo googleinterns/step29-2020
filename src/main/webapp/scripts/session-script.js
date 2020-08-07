@@ -75,6 +75,8 @@ function main() {
           document.getElementById('session-screen'));
   addOnClickListenerToElements();
   serverClient.getSession().then(session => {
+    novncClient.remoteToSession(session.getIpOfVM(), 
+        session.getSessionId());
     setReadOnlyInputs(session.getSessionId());
     document.getElementById('welcome-message').style.display = 'block';
     updateUI();
