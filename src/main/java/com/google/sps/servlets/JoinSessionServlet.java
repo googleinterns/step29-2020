@@ -28,45 +28,44 @@ import com.google.sps.data.Attendee;
  * session webpage.  
  */
 @WebServlet("/join-session")
-public class JoinSessionServlet extends HttpServlet {
+public class JoinSessionServlet extends HttpServlet { 
   private static final String SCREEN_NAME_PARAM_KEY = "name";
   private static final String SESSION_ID_PARAM_KEY = "session-id";
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws IOException {
-      DatastoreClientInterface datastoreClient = new DatastoreClient();
-      String screenName = request.getParameter(SCREEN_NAME_PARAM_KEY);
-      String sessionId = request.getParameter(SESSION_ID_PARAM_KEY);
-      Date timeLastPolled = new Date();
-      List<AttendeeInterface> attendeeList = 
-        datastoreClient.getAttendeesInSession(sessionId);
-      if (attendeeList.isEmpty()) {
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      }
-      else {
-          if (alreadyExists(screenName, attendeeList)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            return;
-          }
-        AttendeeInterface attendee = 
-          new Attendee(sessionId, screenName, timeLastPolled);
-        datastoreClient.insertOrUpdateAttendee(attendee);
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.sendRedirect("/session.html?session-id=" + sessionId + 
-          "&name=" + screenName); 
-      }
+      throws IOException {
+        DatastoreClientInterface datastoreClient = new DatastoreClient();
+        String screenName = request.getParameter(SCREEN_NAME_PARAM_KEY);
+        String sessionId = request.getParameter(SESSION_ID_PARAM_KEY);
+        Date timeLastPolled = new Date();
+        List<AttendeeInterface> attendeeList = 
+            datastoreClient.getAttendeesInSession(sessionId);
+        if (attendeeList.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        else {
+            if (alreadyExists(screenName, attendeeList)) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
+            AttendeeInterface attendee = 
+                new Attendee(sessionId, screenName, timeLastPolled);
+            datastoreClient.insertOrUpdateAttendee(attendee);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.sendRedirect("/session.html?session-id=" + sessionId +
+                "&name=" + screenName); 
+        }
     }
     
     // Checks if a screenName already exists in a session.
     private boolean alreadyExists
         (String screenName, List<AttendeeInterface> attendeeList) {
-          boolean found = false;
-          for (int i = 0; i<attendeeList.size(); i++) {
-            if (attendeeList.get(i).getScreenName().equals(screenName)) {
-              found = true;
+            for (int i = 0; i<attendeeList.size(); i++) {
+                if (attendeeList.get(i).getScreenName().equals(screenName)) {
+                    return true;
+                }
             }
-          }
-          return found;
+            return false;
     }
 }       
